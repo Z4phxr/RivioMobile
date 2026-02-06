@@ -71,11 +71,16 @@ android {
             val keystoreFile = System.getenv("KEYSTORE_FILE")
             
             if (keystoreFile != null && keystoreFile.isNotEmpty()) {
-                // CI/CD environment: use env vars
-                storeFile = file(keystoreFile)
-                storePassword = System.getenv("KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("KEY_ALIAS")
-                keyPassword = System.getenv("KEY_PASSWORD")
+                // CI/CD environment: use env vars with absolute path
+                val keystoreFile_obj = file(keystoreFile)
+                if (keystoreFile_obj.exists()) {
+                    storeFile = keystoreFile_obj
+                    storePassword = System.getenv("KEYSTORE_PASSWORD")
+                    keyAlias = System.getenv("KEY_ALIAS")
+                    keyPassword = System.getenv("KEY_PASSWORD")
+                } else {
+                    throw GradleException("Keystore file not found at: $keystoreFile")
+                }
             } else {
                 // Local development: try key.properties
                 val propertiesFile = rootProject.file("android/key.properties")
@@ -86,6 +91,8 @@ android {
                     storePassword = properties.getProperty("storePassword", "")
                     keyAlias = properties.getProperty("keyAlias", "")
                     keyPassword = properties.getProperty("keyPassword", "")
+                } else {
+                    throw GradleException("Keystore file not found. Set KEYSTORE_FILE env var for CI/CD or android/key.properties for local builds")
                 }
             }
         }
