@@ -68,10 +68,12 @@ class EnvironmentConfig {
   }
 
   /// Check if current environment is development
-  static bool get isDevelopment => currentEnvironment == AppEnvironment.development;
+  static bool get isDevelopment =>
+      currentEnvironment == AppEnvironment.development;
 
   /// Check if current environment is production
-  static bool get isProduction => currentEnvironment == AppEnvironment.production;
+  static bool get isProduction =>
+      currentEnvironment == AppEnvironment.production;
 
   /// Get logging enabled flag
   static bool get enableLogging {

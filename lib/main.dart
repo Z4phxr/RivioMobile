@@ -10,20 +10,20 @@ import 'core/providers/theme_provider.dart';
 import 'core/providers/app_theme_provider.dart';
 import 'core/network/connectivity_check_service.dart';
 
-
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Decide env file WITHOUT reading dotenv first
   const env = String.fromEnvironment('ENV', defaultValue: 'development');
-  final envFileName = env == 'production' ? '.env.production' : '.env.development';
+  final envFileName =
+      env == 'production' ? '.env.production' : '.env.development';
 
   try {
     await dotenv.load(fileName: envFileName);
     debugPrint('✓ Loaded environment from: $envFileName');
   } catch (e) {
-    debugPrint('⚠ Warning: Could not load $envFileName, using default configuration');
+    debugPrint(
+        '⚠ Warning: Could not load $envFileName, using default configuration');
   }
 
   // Now it's safe to read EnvironmentConfig (it can read dotenv)
@@ -48,7 +48,6 @@ Future<void> main() async {
 
   runApp(const ProviderScope(child: HabitTrackerApp()));
 }
-
 
 class HabitTrackerApp extends ConsumerWidget {
   const HabitTrackerApp({super.key});
