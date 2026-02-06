@@ -96,3 +96,5 @@ app.*.map.json
 
 
 docs/
+
+key.properties

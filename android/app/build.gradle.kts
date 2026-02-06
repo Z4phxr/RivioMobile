@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -7,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.rivio.habits"
-    compileSdk = 34
+    compileSdk = 36
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -15,7 +17,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "17"
     }
 
     sourceSets {
@@ -24,19 +26,51 @@ android {
 
     defaultConfig {
         applicationId = "com.rivio.habits"
-        minSdk = 21
-        targetSdk = 34
+        minSdk = flutter.minSdkVersion
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
+    // Helper function to safely get signing config
+    fun getSigningConfig(): String {
+        // Priority 1: Environment variables (GitHub Actions)
+        val keystoreFile = System.getenv("KEYSTORE_FILE")
+        if (keystoreFile != null && keystoreFile.isNotEmpty()) {
+            return "release"
+        }
+
+        // Priority 2: key.properties file (local development)
+        val propertiesFile = rootProject.file("android/key.properties")
+        if (propertiesFile.exists()) {
+            return "release"
+        }
+
+        // Priority 3: Fallback to debug keystore
+        return "debug"
+    }
+
     signingConfigs {
         create("release") {
-            if (System.getenv("KEYSTORE_FILE") != null) {
-                storeFile = file(System.getenv("KEYSTORE_FILE"))
+            val keystoreFile = System.getenv("KEYSTORE_FILE")
+            
+            if (keystoreFile != null && keystoreFile.isNotEmpty()) {
+                // CI/CD environment: use env vars
+                storeFile = file(keystoreFile)
                 storePassword = System.getenv("KEYSTORE_PASSWORD")
                 keyAlias = System.getenv("KEY_ALIAS")
                 keyPassword = System.getenv("KEY_PASSWORD")
+            } else {
+                // Local development: try key.properties
+                val propertiesFile = rootProject.file("android/key.properties")
+                if (propertiesFile.exists()) {
+                    val properties = Properties()
+                    properties.load(propertiesFile.inputStream())
+                    storeFile = file(properties.getProperty("storeFile", ""))
+                    storePassword = properties.getProperty("storePassword", "")
+                    keyAlias = properties.getProperty("keyAlias", "")
+                    keyPassword = properties.getProperty("keyPassword", "")
+                }
             }
         }
     }
@@ -50,9 +84,8 @@ android {
                 "proguard-rules.pro"
             )
             
-            if (System.getenv("KEYSTORE_FILE") != null) {
-                signingConfig = signingConfigs.getByName("release")
-            }
+            // Use the appropriate signing config
+            signingConfig = signingConfigs.getByName(getSigningConfig())
         }
         
         debug {
