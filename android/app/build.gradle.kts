@@ -32,6 +32,22 @@ android {
         versionName = flutter.versionName
     }
 
+    // Build Flavors for Development and Production
+    flavorDimensions += "environment"
+    
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+        }
+        
+        create("prod") {
+            dimension = "environment"
+            // No suffix for production - this is the main app
+        }
+    }
+
     // Helper function to safely get signing config
     fun getSigningConfig(): String {
         // Priority 1: Environment variables (GitHub Actions)
@@ -89,8 +105,8 @@ android {
         }
         
         debug {
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-debug"
+            // Debug suffix is handled by flavor
+            isDebuggable = true
         }
     }
 }

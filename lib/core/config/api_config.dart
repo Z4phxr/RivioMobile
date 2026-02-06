@@ -1,33 +1,18 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:habit_tracker/core/config/env_config.dart';
 
 /// Centralized API configuration for all HTTP requests
 /// Supports development and production environments
 class ApiConfig {
-  // Environment detection
-  static const String _environment =
-      String.fromEnvironment('ENV', defaultValue: 'dev');
-
-  // Base URLs
-  static const String _devBaseUrl = 'http://localhost:8000';
-  static const String _prodBaseUrl = 'https://rivio.up.railway.app';
-
-  /// Get base URL based on environment
-  static String get baseUrl {
-    // Try to load from .env file first
-    final envBaseUrl = dotenv.maybeGet('API_BASE_URL');
-    if (envBaseUrl != null && envBaseUrl.isNotEmpty) {
-      return envBaseUrl;
-    }
-
-    // Fallback to hardcoded URLs based on environment
-    return _environment == 'prod' ? _prodBaseUrl : _devBaseUrl;
-  }
-
-  // API Version
+  // API Version - Update this when backend API version changes
   static const String apiVersion = '/api/v1';
 
+  /// Get base URL (delegates to EnvironmentConfig for environment detection)
+  /// Returns either http://localhost:8000 (dev) or https://rivio.up.railway.app (prod)
+  static String get baseUrl => EnvironmentConfig.baseUrl;
+
   /// Full API base URL with version
-  static String get apiBaseUrl => '$baseUrl$apiVersion';
+  /// Uses EnvironmentConfig to determine the correct base URL
+  static String get apiBaseUrl => '${EnvironmentConfig.baseUrl}$apiVersion';
 
   // Timeout configurations
   static const Duration connectTimeout = Duration(seconds: 30);
@@ -92,11 +77,9 @@ class ApiConfig {
   }
 
   // Environment helpers
-  static bool get isDevelopment =>
-      _environment == 'dev' || _environment == 'development';
-  static bool get isProduction =>
-      _environment == 'prod' || _environment == 'production';
+  static bool get isDevelopment => EnvironmentConfig.isDevelopment;
+  static bool get isProduction => EnvironmentConfig.isProduction;
 
   // Logging configuration
-  static bool get enableLogging => isDevelopment;
+  static bool get enableLogging => EnvironmentConfig.enableLogging;
 }
