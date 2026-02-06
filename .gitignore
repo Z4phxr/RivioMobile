@@ -88,11 +88,10 @@ app.*.map.json
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
-# Environment files (keep examples, ignore actual secrets)
+# Environment files
 .env
 .env.local
-.env.production
-.env.local
+
 
 
 docs/
