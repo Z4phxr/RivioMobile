@@ -12,7 +12,7 @@ class GetHabitsUseCase {
 
   /// Fetch habits with their completion logs
   Future<({List<Habit> habits, Map<String, bool> completions})>
-  callWithCompletions() {
+      callWithCompletions() {
     return repository.getHabitsWithCompletions();
   }
 }

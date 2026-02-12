@@ -129,8 +129,7 @@ class _SleepWeekScreenState extends ConsumerState<SleepWeekScreen> {
     final avgDuration = logsWithData.isEmpty
         ? Duration.zero
         : Duration(
-            milliseconds:
-                logsWithData
+            milliseconds: logsWithData
                     .map((log) => log!.duration.inMilliseconds)
                     .reduce((a, b) => a + b) ~/
                 logsWithData.length,
@@ -171,9 +170,8 @@ class _SleepWeekScreenState extends ConsumerState<SleepWeekScreen> {
                   final index = entry.key;
                   final log = entry.value;
                   // Parse duration from Duration object
-                  final hours = log != null
-                      ? log.duration.inMinutes / 60.0
-                      : 0.0;
+                  final hours =
+                      log != null ? log.duration.inMinutes / 60.0 : 0.0;
 
                   return BarChartGroupData(
                     x: index,
@@ -183,9 +181,9 @@ class _SleepWeekScreenState extends ConsumerState<SleepWeekScreen> {
                         color: hours >= 7 && hours <= 9
                             ? Colors.green
                             : hours >= 5 && hours < 7 ||
-                                  hours > 9 && hours <= 10
-                            ? Colors.orange
-                            : Colors.red,
+                                    hours > 9 && hours <= 10
+                                ? Colors.orange
+                                : Colors.red,
                         width: 24,
                         borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(4),

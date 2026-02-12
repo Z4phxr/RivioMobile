@@ -54,9 +54,9 @@ class _AppShellState extends ConsumerState<AppShell> {
           child: Text(
             'Rivio',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
-            ),
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                ),
           ),
         ),
         actions: [

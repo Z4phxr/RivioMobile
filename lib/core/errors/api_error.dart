@@ -61,8 +61,7 @@ class ApiError implements Exception {
         return ApiError(message: 'Request cancelled');
       case DioExceptionType.connectionError:
         return ApiError(
-          message:
-              'Cannot connect to server. Please check:\n'
+          message: 'Cannot connect to server. Please check:\n'
               '1. Backend server is running\n'
               '2. Your internet connection\n'
               '3. Firewall settings',

@@ -10,7 +10,7 @@ class TokenRefreshInterceptor extends Interceptor {
 
   bool _isRefreshing = false;
   final List<({RequestOptions options, ErrorInterceptorHandler handler})>
-  _pendingRequests = [];
+      _pendingRequests = [];
 
   TokenRefreshInterceptor(this._dio, this._storage, this._onRefreshFailed);
 

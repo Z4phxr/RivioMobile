@@ -15,9 +15,8 @@ Future<void> main() async {
 
   // Decide env file WITHOUT reading dotenv first
   const env = String.fromEnvironment('ENV', defaultValue: 'development');
-  final envFileName = env == 'production'
-      ? '.env.production'
-      : '.env.development';
+  final envFileName =
+      env == 'production' ? '.env.production' : '.env.development';
 
   try {
     await dotenv.load(fileName: envFileName);

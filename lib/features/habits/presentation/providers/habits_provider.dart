@@ -362,13 +362,13 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
 // Provider
 final habitsNotifierProvider =
     StateNotifierProvider<HabitsNotifier, HabitsState>((ref) {
-      return HabitsNotifier(
-        getHabitsUseCase: ref.watch(getHabitsUseCaseProvider),
-        createHabitUseCase: ref.watch(createHabitUseCaseProvider),
-        updateHabitUseCase: ref.watch(updateHabitUseCaseProvider),
-        deleteHabitUseCase: ref.watch(deleteHabitUseCaseProvider),
-        toggleArchiveUseCase: ref.watch(toggleArchiveHabitUseCaseProvider),
-        toggleHabitLogUseCase: ref.watch(toggleHabitLogUseCaseProvider),
-        completionStorage: ref.watch(habitCompletionStorageProvider),
-      );
-    });
+  return HabitsNotifier(
+    getHabitsUseCase: ref.watch(getHabitsUseCaseProvider),
+    createHabitUseCase: ref.watch(createHabitUseCaseProvider),
+    updateHabitUseCase: ref.watch(updateHabitUseCaseProvider),
+    deleteHabitUseCase: ref.watch(deleteHabitUseCaseProvider),
+    toggleArchiveUseCase: ref.watch(toggleArchiveHabitUseCaseProvider),
+    toggleHabitLogUseCase: ref.watch(toggleHabitLogUseCaseProvider),
+    completionStorage: ref.watch(habitCompletionStorageProvider),
+  );
+});

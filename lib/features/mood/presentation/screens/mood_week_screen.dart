@@ -135,7 +135,7 @@ class _MoodWeekScreenState extends ConsumerState<MoodWeekScreen> {
     final avgMood = logsWithData.isEmpty
         ? 0.0
         : logsWithData.map((log) => log!.mood).reduce((a, b) => a + b) /
-              logsWithData.length;
+            logsWithData.length;
 
     return Padding(
       padding: const EdgeInsets.all(16),

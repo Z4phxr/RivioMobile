@@ -16,7 +16,7 @@ class HabitRepositoryImpl implements HabitRepository {
 
   @override
   Future<({List<Habit> habits, Map<String, bool> completions})>
-  getHabitsWithCompletions() async {
+      getHabitsWithCompletions() async {
     debugPrint('📋 HabitRepository: Fetching habits with completions...');
     final dtos = await remoteDatasource.getHabits();
 

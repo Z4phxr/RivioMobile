@@ -89,9 +89,7 @@ class _MoodDayScreenState extends ConsumerState<MoodDayScreen> {
     }
 
     try {
-      await ref
-          .read(moodNotifierProvider.notifier)
-          .saveMoodLog(
+      await ref.read(moodNotifierProvider.notifier).saveMoodLog(
             date: _selectedDate,
             mood: _selectedMood!,
             note: _noteController.text.isEmpty ? null : _noteController.text,
@@ -249,11 +247,11 @@ class _MoodDayScreenState extends ConsumerState<MoodDayScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 5,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: 8,
-                          childAspectRatio: 1.2,
-                        ),
+                      crossAxisCount: 5,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
+                      childAspectRatio: 1.2,
+                    ),
                     itemCount: 10,
                     itemBuilder: (context, index) {
                       final mood = index + 1;
