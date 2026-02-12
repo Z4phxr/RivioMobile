@@ -6,7 +6,6 @@ import 'package:habit_tracker/core/network/interceptors/auth_interceptor.dart';
 import 'package:habit_tracker/core/network/interceptors/token_refresh_interceptor.dart';
 import 'package:habit_tracker/core/network/interceptors/logging_interceptor.dart';
 import 'package:habit_tracker/core/storage/secure_storage_service.dart';
-import 'package:habit_tracker/features/auth/presentation/providers/auth_provider.dart';
 
 class ApiClient {
   late final Dio _dio;
@@ -107,9 +106,9 @@ final apiClientProvider = Provider<ApiClient>((ref) {
   return ApiClient(
     storage,
     () {
-      // Token refresh failed - notify auth provider to clear state
-      debugPrint(' ApiClient: Token refresh failed, clearing auth state');
-      ref.read(authNotifierProvider.notifier).handleTokenRefreshFailure();
+      // Token refresh failed - tokens are already cleared by interceptor
+      // The next auth check will naturally route to login
+      debugPrint('🚫 ApiClient: Token refresh failed, tokens cleared');
     },
   );
 });

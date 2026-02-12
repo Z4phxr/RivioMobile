@@ -46,11 +46,12 @@ class _SleepMonthScreenState extends ConsumerState<SleepMonthScreen> {
   Color _getSleepColor(Duration? duration, ThemeData theme) {
     if (duration == null) return _getEmptyDayColor(theme);
     final hours = duration.inMinutes / 60.0;
-    if (hours >= 7 && hours <= 9) return Colors.green.shade300;
+    // Match Week Sleep View colors exactly
+    if (hours >= 7 && hours <= 9) return Colors.green;
     if ((hours >= 5 && hours < 7) || (hours > 9 && hours <= 10)) {
-      return Colors.yellow.shade300;
+      return Colors.orange;
     }
-    return Colors.red.shade300;
+    return Colors.red;
   }
 
   Color _getEmptyDayColor(ThemeData theme) {
@@ -232,9 +233,9 @@ class _SleepMonthScreenState extends ConsumerState<SleepMonthScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildLegendItem('7-9h', Colors.green.shade300),
-                  _buildLegendItem('5-7h, 9-10h', Colors.yellow.shade300),
-                  _buildLegendItem('<5h, >10h', Colors.red.shade300),
+                  _buildLegendItem('7-9h', Colors.green),
+                  _buildLegendItem('5-7h, 9-10h', Colors.orange),
+                  _buildLegendItem('<5h, >10h', Colors.red),
                   _buildLegendItem(
                     'No data',
                     _getEmptyDayColor(Theme.of(context)),

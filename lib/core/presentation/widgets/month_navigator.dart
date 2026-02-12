@@ -46,10 +46,7 @@ class MonthNavigator extends StatelessWidget {
                 selectedDate.month + 1,
                 1,
               );
-              if (newDate
-                  .isBefore(DateTime.now().add(const Duration(days: 1)))) {
-                onDateChanged(newDate);
-              }
+              onDateChanged(newDate);
             },
           ),
         ],

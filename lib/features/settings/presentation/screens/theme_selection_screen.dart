@@ -11,9 +11,7 @@ class ThemeSelectionScreen extends ConsumerWidget {
     final currentTheme = ref.watch(appThemeProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rivio'),
-      ),
+      appBar: AppBar(),
       body: GridView.builder(
         padding: const EdgeInsets.all(16),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/api_client.dart';
 import '../../../../core/storage/secure_storage_service.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -43,8 +42,8 @@ class AuthState {
 
 // Providers
 final authRemoteDatasourceProvider = Provider<AuthRemoteDatasource>((ref) {
-  final apiClient = ref.watch(apiClientProvider);
-  return AuthRemoteDatasource(apiClient);
+  // Import moved to datasource file to avoid circular dependency
+  return AuthRemoteDatasource.fromRef(ref);
 });
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {

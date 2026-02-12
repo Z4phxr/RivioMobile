@@ -113,6 +113,11 @@ class _EditHabitsScreenState extends ConsumerState<EditHabitsScreen> {
   Future<void> _toggleArchive(int id) async {
     try {
       await ref.read(habitsNotifierProvider.notifier).toggleArchive(id);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Habit archive status updated')),
+        );
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
