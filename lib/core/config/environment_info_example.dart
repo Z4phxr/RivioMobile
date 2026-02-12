@@ -5,7 +5,7 @@ import 'package:habit_tracker/core/config/env_config.dart';
 /// Example widget showing proper usage of environment configuration
 /// This is a reference implementation - copy patterns to your own widgets
 class EnvironmentInfoExample extends StatelessWidget {
-  const EnvironmentInfoExample({Key? key}) : super(key: key);
+  const EnvironmentInfoExample({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -197,23 +197,22 @@ class EnvironmentInfoExample extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.grey[900],
-              borderRadius: BorderRadius.circular(8),
-              fontFamily: 'Courier',
-            ),
-            child: Text(
-              code,
-              style: const TextStyle(
-                fontSize: 12,
-                fontFamily: 'monospace',
-                color: Colors.green,
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[900],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                code,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontFamily: 'monospace',
+                  color: Colors.green,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

@@ -92,9 +92,9 @@ class EnvironmentConfig {
 ╔════════════════════════════════════════╗
 ║     Environment Configuration         ║
 ╠════════════════════════════════════════╣
-║ Environment: $environmentName
-║ Base URL: ${baseUrl}
-║ Logging: ${enableLogging}
+  ║ Environment: $environmentName
+  ║ Base URL: $baseUrl
+  ║ Logging: $enableLogging
 ╚════════════════════════════════════════╝
 ''';
   }
