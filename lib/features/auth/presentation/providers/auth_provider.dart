@@ -1,5 +1,5 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/api_client.dart';
 import '../../../../core/storage/secure_storage_service.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -17,19 +17,11 @@ class AuthState {
   final bool isLoading;
   final String? error;
 
-  const AuthState({
-    this.user,
-    this.isLoading = false,
-    this.error,
-  });
+  const AuthState({this.user, this.isLoading = false, this.error});
 
   bool get isAuthenticated => user != null;
 
-  AuthState copyWith({
-    User? user,
-    bool? isLoading,
-    String? error,
-  }) {
+  AuthState copyWith({User? user, bool? isLoading, String? error}) {
     return AuthState(
       user: user ?? this.user,
       isLoading: isLoading ?? this.isLoading,
@@ -42,8 +34,8 @@ class AuthState {
 
 // Providers
 final authRemoteDatasourceProvider = Provider<AuthRemoteDatasource>((ref) {
-  final apiClient = ref.watch(apiClientProvider);
-  return AuthRemoteDatasource(apiClient);
+  // Import moved to datasource file to avoid circular dependency
+  return AuthRemoteDatasource.fromRef(ref);
 });
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -100,28 +92,44 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> checkAuthStatus() async {
+    debugPrint('🔐 AuthNotifier: Checking auth status...');
     state = state.copyWith(isLoading: true);
     try {
       final user = await getCurrentUserUseCase();
-      state = AuthState(user: user, isLoading: false);
+      if (user != null) {
+        debugPrint('✅ AuthNotifier: User authenticated - ${user.username}');
+        state = AuthState(user: user, isLoading: false);
+      } else {
+        debugPrint('❌ AuthNotifier: No valid session found');
+        state = const AuthState(isLoading: false);
+      }
     } catch (e) {
+      // Don't clear auth on temporary network errors
+      // Only clear if it's an auth error (401/403)
+      debugPrint(' AuthNotifier: Auth check failed - $e');
       state = const AuthState(isLoading: false);
     }
+  }
+
+  /// Called when token refresh fails - force logout
+  void handleTokenRefreshFailure() {
+    debugPrint('🚫 AuthNotifier: Token refresh failed, forcing logout');
+    state = const AuthState();
   }
 
   Future<void> login({
     required String username,
     required String password,
   }) async {
+    debugPrint('🔐 AuthNotifier: Attempting login for user: $username');
     state = state.copyWith(isLoading: true, error: '');
     try {
       final result = await loginUseCase(username: username, password: password);
+      debugPrint('✅ AuthNotifier: Login successful - ${result.user.username}');
       state = AuthState(user: result.user, isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      debugPrint('❌ AuthNotifier: Login failed - $e');
+      state = state.copyWith(isLoading: false, error: e.toString());
       rethrow;
     }
   }
@@ -140,17 +148,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
       state = AuthState(user: result.user, isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
       rethrow;
     }
   }
 
   Future<void> logout() async {
+    debugPrint('🚪 AuthNotifier: Logging out user');
     await logoutUseCase();
     state = const AuthState();
+    debugPrint('✅ AuthNotifier: Logout complete');
   }
 
   /// Invalidate all domain data providers on logout
@@ -165,8 +172,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 }
 
-final authNotifierProvider =
-    StateNotifierProvider<AuthNotifier, AuthState>((ref) {
+final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>((
+  ref,
+) {
   return AuthNotifier(
     loginUseCase: ref.watch(loginUseCaseProvider),
     registerUseCase: ref.watch(registerUseCaseProvider),

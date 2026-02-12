@@ -5,11 +5,7 @@ class ApiError implements Exception {
   final int? statusCode;
   final Map<String, List<String>>? fieldErrors;
 
-  ApiError({
-    required this.message,
-    this.statusCode,
-    this.fieldErrors,
-  });
+  ApiError({required this.message, this.statusCode, this.fieldErrors});
 
   factory ApiError.fromDioException(DioException e) {
     if (e.response?.data is Map) {
@@ -65,7 +61,8 @@ class ApiError implements Exception {
         return ApiError(message: 'Request cancelled');
       case DioExceptionType.connectionError:
         return ApiError(
-          message: 'Cannot connect to server. Please check:\n'
+          message:
+              'Cannot connect to server. Please check:\n'
               '1. Backend server is running\n'
               '2. Your internet connection\n'
               '3. Firewall settings',

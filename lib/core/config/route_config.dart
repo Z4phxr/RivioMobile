@@ -41,12 +41,15 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: '/',
     redirect: (context, state) {
       final isAuthenticated = authState.isAuthenticated;
-      final isAuthRoute = state.matchedLocation == '/' ||
+      final isAuthRoute =
+          state.matchedLocation == '/' ||
           state.matchedLocation == '/login' ||
           state.matchedLocation == '/register';
-      final isPinRoute = state.matchedLocation == '/pin' ||
+      final isPinRoute =
+          state.matchedLocation == '/pin' ||
           state.matchedLocation == '/pin/setup';
-      final isPinSetupAfterReg = state.matchedLocation == '/pin/setup' &&
+      final isPinSetupAfterReg =
+          state.matchedLocation == '/pin/setup' &&
           state.uri.queryParameters['afterRegistration'] == 'true';
 
       // If authenticated and PIN is set but not unlocked
@@ -76,14 +79,8 @@ final routerProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       // Unauthenticated routes
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const LandingScreen(),
-      ),
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginScreen(),
-      ),
+      GoRoute(path: '/', builder: (context, state) => const LandingScreen()),
+      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
         path: '/register',
         builder: (context, state) => const RegisterScreen(),

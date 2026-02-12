@@ -46,11 +46,12 @@ class _SleepMonthScreenState extends ConsumerState<SleepMonthScreen> {
   Color _getSleepColor(Duration? duration, ThemeData theme) {
     if (duration == null) return _getEmptyDayColor(theme);
     final hours = duration.inMinutes / 60.0;
-    if (hours >= 7 && hours <= 9) return Colors.green.shade300;
+    // Match Week Sleep View colors exactly
+    if (hours >= 7 && hours <= 9) return Colors.green;
     if ((hours >= 5 && hours < 7) || (hours > 9 && hours <= 10)) {
-      return Colors.yellow.shade300;
+      return Colors.orange;
     }
-    return Colors.red.shade300;
+    return Colors.red;
   }
 
   Color _getEmptyDayColor(ThemeData theme) {
@@ -110,18 +111,18 @@ class _SleepMonthScreenState extends ConsumerState<SleepMonthScreen> {
             const SizedBox(height: 16),
             Text('Error: ${state.error}'),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadData,
-              child: const Text('Retry'),
-            ),
+            ElevatedButton(onPressed: _loadData, child: const Text('Retry')),
           ],
         ),
       );
     }
 
     // Build calendar grid
-    final firstDayOfMonth =
-        DateTime(_selectedDate.year, _selectedDate.month, 1);
+    final firstDayOfMonth = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      1,
+    );
     final firstWeekday = firstDayOfMonth.weekday;
     final daysInMonth = monthDays.length;
 
@@ -171,8 +172,8 @@ class _SleepMonthScreenState extends ConsumerState<SleepMonthScreen> {
                 final hasData = duration != null;
                 final dayTextColor =
                     !hasData && theme.brightness == Brightness.dark
-                        ? Colors.white
-                        : theme.colorScheme.onSurface;
+                    ? Colors.white
+                    : theme.colorScheme.onSurface;
 
                 return InkWell(
                   onTap: () {
@@ -183,12 +184,14 @@ class _SleepMonthScreenState extends ConsumerState<SleepMonthScreen> {
                       color: _getSleepColor(duration, theme),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: date.day == DateTime.now().day &&
+                        color:
+                            date.day == DateTime.now().day &&
                                 date.month == DateTime.now().month &&
                                 date.year == DateTime.now().year
                             ? Colors.blue
                             : Colors.grey.shade300,
-                        width: date.day == DateTime.now().day &&
+                        width:
+                            date.day == DateTime.now().day &&
                                 date.month == DateTime.now().month &&
                                 date.year == DateTime.now().year
                             ? 2
@@ -232,9 +235,9 @@ class _SleepMonthScreenState extends ConsumerState<SleepMonthScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildLegendItem('7-9h', Colors.green.shade300),
-                  _buildLegendItem('5-7h, 9-10h', Colors.yellow.shade300),
-                  _buildLegendItem('<5h, >10h', Colors.red.shade300),
+                  _buildLegendItem('7-9h', Colors.green),
+                  _buildLegendItem('5-7h, 9-10h', Colors.orange),
+                  _buildLegendItem('<5h, >10h', Colors.red),
                   _buildLegendItem(
                     'No data',
                     _getEmptyDayColor(Theme.of(context)),

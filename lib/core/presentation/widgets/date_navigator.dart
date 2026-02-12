@@ -43,15 +43,12 @@ class DateNavigator extends StatelessWidget {
               child: Column(
                 children: [
                   if (title != null)
-                    Text(
-                      title!,
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
+                    Text(title!, style: Theme.of(context).textTheme.titleSmall),
                   Text(
                     DateFormat('EEEE, MMM d, yyyy').format(selectedDate),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -61,10 +58,7 @@ class DateNavigator extends StatelessWidget {
             icon: const Icon(Icons.chevron_right),
             onPressed: () {
               final newDate = selectedDate.add(const Duration(days: 1));
-              if (newDate
-                  .isBefore(DateTime.now().add(const Duration(days: 1)))) {
-                onDateChanged(newDate);
-              }
+              onDateChanged(newDate);
             },
           ),
         ],

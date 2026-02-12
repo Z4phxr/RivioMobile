@@ -22,11 +22,7 @@ class MoodRemoteDatasource {
     required int mood,
     String? note,
   }) async {
-    final request = MoodLogCreateRequest(
-      date: date,
-      mood: mood,
-      note: note,
-    );
+    final request = MoodLogCreateRequest(date: date, mood: mood, note: note);
     final response = await apiClient.post(
       ApiConfig.mood,
       data: request.toJson(),

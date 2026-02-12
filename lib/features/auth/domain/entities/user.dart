@@ -3,11 +3,7 @@ class User {
   final String username;
   final String? email;
 
-  const User({
-    required this.id,
-    required this.username,
-    this.email,
-  });
+  const User({required this.id, required this.username, this.email});
 
   @override
   bool operator ==(Object other) =>

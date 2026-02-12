@@ -10,9 +10,7 @@ class EnvironmentInfoExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Environment Configuration'),
-      ),
+      appBar: AppBar(title: const Text('Environment Configuration')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -140,10 +138,7 @@ class EnvironmentInfoExample extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         ...children,
@@ -152,11 +147,7 @@ class EnvironmentInfoExample extends StatelessWidget {
   }
 
   /// Build an info tile showing key-value pair
-  Widget _buildInfoTile(
-    String label,
-    String value, {
-    required bool isDev,
-  }) {
+  Widget _buildInfoTile(String label, String value, {required bool isDev}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
@@ -182,10 +173,7 @@ class EnvironmentInfoExample extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               value,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -238,15 +226,9 @@ class EnvironmentInfoExample extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
-          Text(
-            description,
-            style: const TextStyle(color: Colors.grey),
-          ),
+          Text(description, style: const TextStyle(color: Colors.grey)),
         ],
       ),
     );

@@ -35,10 +35,6 @@ class HabitLogDto {
     return '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
-  HabitLog toEntity() => HabitLog(
-        id: id,
-        habitId: habitId,
-        date: date,
-        completed: completed,
-      );
+  HabitLog toEntity() =>
+      HabitLog(id: id, habitId: habitId, date: date, completed: completed);
 }

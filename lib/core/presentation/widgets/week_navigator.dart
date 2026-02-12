@@ -40,19 +40,16 @@ class WeekNavigator extends StatelessWidget {
             child: Text(
               '${weekStart.month}/${weekStart.day} - ${weekEnd.month}/${weekEnd.day}',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
           IconButton(
             icon: const Icon(Icons.chevron_right),
             onPressed: () {
               final newDate = selectedDate.add(const Duration(days: 7));
-              if (newDate
-                  .isBefore(DateTime.now().add(const Duration(days: 1)))) {
-                onDateChanged(newDate);
-              }
+              onDateChanged(newDate);
             },
           ),
         ],

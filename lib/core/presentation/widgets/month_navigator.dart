@@ -33,9 +33,9 @@ class MonthNavigator extends StatelessWidget {
             child: Text(
               DateFormat('MMMM yyyy').format(selectedDate),
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
           IconButton(
@@ -46,10 +46,7 @@ class MonthNavigator extends StatelessWidget {
                 selectedDate.month + 1,
                 1,
               );
-              if (newDate
-                  .isBefore(DateTime.now().add(const Duration(days: 1)))) {
-                onDateChanged(newDate);
-              }
+              onDateChanged(newDate);
             },
           ),
         ],

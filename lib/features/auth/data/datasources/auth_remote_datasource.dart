@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/config/api_config.dart';
 import '../models/login_request_dto.dart';
@@ -8,6 +9,12 @@ class AuthRemoteDatasource {
   final ApiClient apiClient;
 
   const AuthRemoteDatasource(this.apiClient);
+
+  /// Factory to create datasource from Riverpod Ref (avoids circular dependency)
+  factory AuthRemoteDatasource.fromRef(Ref ref) {
+    final apiClient = ref.watch(apiClientProvider);
+    return AuthRemoteDatasource(apiClient);
+  }
 
   Future<AuthResponseDto> login(LoginRequestDto request) async {
     final response = await apiClient.post(
@@ -29,10 +36,7 @@ class AuthRemoteDatasource {
   /// Requires: Authorization header with access token
   /// Body: {"refresh": "refresh_token_string"}
   Future<void> logout(String refreshToken) async {
-    await apiClient.post(
-      ApiConfig.authLogout,
-      data: {'refresh': refreshToken},
-    );
+    await apiClient.post(ApiConfig.authLogout, data: {'refresh': refreshToken});
   }
 
   Future<UserDto> getCurrentUser() async {

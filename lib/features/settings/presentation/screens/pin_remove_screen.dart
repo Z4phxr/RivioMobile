@@ -50,9 +50,7 @@ class _PinRemoveScreenState extends ConsumerState<PinRemoveScreen> {
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.red,
-            ),
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Remove'),
           ),
         ],
@@ -84,20 +82,14 @@ class _PinRemoveScreenState extends ConsumerState<PinRemoveScreen> {
     final pinState = ref.watch(pinLockProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Remove PIN'),
-      ),
+      appBar: AppBar(title: const Text('Remove PIN')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.lock_open,
-                size: 80,
-                color: Colors.red,
-              ),
+              const Icon(Icons.lock_open, size: 80, color: Colors.red),
               const SizedBox(height: 24),
               Text(
                 'Remove PIN',
@@ -106,9 +98,9 @@ class _PinRemoveScreenState extends ConsumerState<PinRemoveScreen> {
               const SizedBox(height: 8),
               Text(
                 'Enter your current PIN to remove app lock',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -150,9 +142,7 @@ class _PinRemoveScreenState extends ConsumerState<PinRemoveScreen> {
                   letterSpacing: 24,
                   fontWeight: FontWeight.bold,
                 ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: const InputDecoration(
                   counterText: '',
                   border: OutlineInputBorder(),

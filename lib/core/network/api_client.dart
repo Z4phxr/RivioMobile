@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/config/api_config.dart';
 import 'package:habit_tracker/core/network/interceptors/auth_interceptor.dart';
@@ -11,10 +12,7 @@ class ApiClient {
   final SecureStorageService _storage;
   final void Function() _onTokenRefreshFailed;
 
-  ApiClient(
-    this._storage,
-    this._onTokenRefreshFailed,
-  ) {
+  ApiClient(this._storage, this._onTokenRefreshFailed) {
     _dio = Dio(
       BaseOptions(
         baseUrl: ApiConfig.apiBaseUrl,
@@ -102,10 +100,9 @@ class ApiClient {
 // Provider
 final apiClientProvider = Provider<ApiClient>((ref) {
   final storage = ref.watch(secureStorageServiceProvider);
-  return ApiClient(
-    storage,
-    () {
-      // Token refresh failed, will be handled by auth provider
-    },
-  );
+  return ApiClient(storage, () {
+    // Token refresh failed - tokens are already cleared by interceptor
+    // The next auth check will naturally route to login
+    debugPrint('🚫 ApiClient: Token refresh failed, tokens cleared');
+  });
 });

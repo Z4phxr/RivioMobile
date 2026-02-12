@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/network/api_client.dart';
 import '../../domain/entities/habit.dart';
@@ -13,8 +14,9 @@ import '../../data/datasources/habit_completion_storage.dart';
 import '../../data/repositories/habit_repository_impl.dart';
 
 // Storage provider
-final habitCompletionStorageProvider =
-    Provider<HabitCompletionStorageService>((ref) {
+final habitCompletionStorageProvider = Provider<HabitCompletionStorageService>((
+  ref,
+) {
   return HabitCompletionStorageService();
 });
 
@@ -51,8 +53,9 @@ final deleteHabitUseCaseProvider = Provider<DeleteHabitUseCase>((ref) {
   return DeleteHabitUseCase(repository);
 });
 
-final toggleArchiveHabitUseCaseProvider =
-    Provider<ToggleArchiveHabitUseCase>((ref) {
+final toggleArchiveHabitUseCaseProvider = Provider<ToggleArchiveHabitUseCase>((
+  ref,
+) {
   final repository = ref.watch(habitRepositoryProvider);
   return ToggleArchiveHabitUseCase(repository);
 });
@@ -125,21 +128,68 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
     required this.toggleHabitLogUseCase,
     required this.completionStorage,
   }) : super(const HabitsState()) {
+    debugPrint('🐛 HabitsNotifier: Initializing...');
     _loadCompletionsFromStorage();
   }
 
   /// Load persisted completions from storage
   Future<void> _loadCompletionsFromStorage() async {
+    debugPrint('💾 HabitsNotifier: Loading completions from local storage...');
     final completions = await completionStorage.loadCompletions();
+    debugPrint(
+      '✅ HabitsNotifier: Loaded ${completions.length} completions from storage',
+    );
     state = state.copyWith(optimisticToggles: completions);
   }
 
-  Future<void> loadHabits() async {
+  Future<void> loadHabits({bool skipCompletions = false}) async {
+    debugPrint(
+      '📋 HabitsNotifier: Loading habits (skipCompletions: $skipCompletions)...',
+    );
     state = state.copyWith(isLoading: true, error: null);
     try {
-      final habits = await getHabitsUseCase();
-      state = state.copyWith(habits: habits, isLoading: false);
+      if (skipCompletions) {
+        // Just load habits without completions
+        final habits = await getHabitsUseCase();
+        debugPrint('✅ HabitsNotifier: Loaded ${habits.length} habits');
+        state = state.copyWith(habits: habits, isLoading: false);
+      } else {
+        // Load habits WITH completions from server
+        final result = await getHabitsUseCase.callWithCompletions();
+        debugPrint(
+          '✅ HabitsNotifier: Loaded ${result.habits.length} habits with ${result.completions.length} server completions',
+        );
+
+        // Merge server completions with local optimistic updates
+        final mergedCompletions = <String, bool>{};
+        mergedCompletions.addAll(result.completions); // Start with server data
+
+        // Overlay any pending optimistic updates (don't lose uncommitted changes)
+        for (final entry in state.optimisticToggles.entries) {
+          if (state.pendingToggles.contains(entry.key)) {
+            // Keep pending toggles as-is
+            mergedCompletions[entry.key] = entry.value;
+          } else if (!result.completions.containsKey(entry.key)) {
+            // Keep local-only completions (might be very recent)
+            mergedCompletions[entry.key] = entry.value;
+          }
+        }
+
+        debugPrint(
+          '🔄 HabitsNotifier: Merged to ${mergedCompletions.length} total completions',
+        );
+
+        state = state.copyWith(
+          habits: result.habits,
+          optimisticToggles: mergedCompletions,
+          isLoading: false,
+        );
+
+        // Persist merged state to storage
+        await completionStorage.saveCompletions(mergedCompletions);
+      }
     } catch (e) {
+      debugPrint('❌ HabitsNotifier: Failed to load habits - $e');
       state = state.copyWith(isLoading: false, error: e.toString());
       rethrow;
     }
@@ -198,11 +248,17 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
     // SYNCHRONOUS check - prevent duplicate toggles for the same habit+date
     // This is checked BEFORE any async operations, so rapid clicks are blocked immediately
     if (_activeToggles.contains(key)) {
+      debugPrint(
+        '⚠️ HabitsNotifier: Toggle already in progress for $key, ignoring',
+      );
       return; // Already being toggled, ignore this request
     }
 
     // Also check async pending state (belt and suspenders approach)
     if (state.pendingToggles.contains(key)) {
+      debugPrint(
+        '⚠️ HabitsNotifier: Toggle already pending for $key, ignoring',
+      );
       return;
     }
 
@@ -212,6 +268,10 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
     // Get ACTUAL current state BEFORE marking as pending
     final storedValue = state.optimisticToggles[key] ?? false;
     final targetValue = !storedValue;
+
+    debugPrint(
+      '🔄 HabitsNotifier: Toggling habit $habitId on ${_formatDate(date)}: $storedValue -> $targetValue',
+    );
 
     // Optimistic update - toggle from stored value
     final currentToggles = Map<String, bool>.from(state.optimisticToggles);
@@ -226,6 +286,9 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
 
     try {
       final isCompleted = await toggleHabitLogUseCase(habitId, date);
+      debugPrint(
+        '✅ HabitsNotifier: Server confirmed habit $habitId on ${_formatDate(date)}: $isCompleted',
+      );
 
       // Update state based on server response
       final updatedToggles = Map<String, bool>.from(state.optimisticToggles);
@@ -242,6 +305,7 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
       // Debounced persist to storage (prevents race conditions with rapid toggles)
       await _debouncedSaveToStorage();
     } catch (e) {
+      debugPrint('❌ HabitsNotifier: Toggle failed for $key, rolling back - $e');
       // Rollback on error - restore stored value
       final rolledBackToggles = Map<String, bool>.from(state.optimisticToggles);
       rolledBackToggles[key] = storedValue;
@@ -280,6 +344,7 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
 
   /// Clear all completions (call on logout)
   Future<void> clearCompletions() async {
+    debugPrint('🧹 HabitsNotifier: Clearing all completions');
     await completionStorage.clearCompletions();
     state = state.copyWith(optimisticToggles: {});
   }
@@ -297,13 +362,13 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
 // Provider
 final habitsNotifierProvider =
     StateNotifierProvider<HabitsNotifier, HabitsState>((ref) {
-  return HabitsNotifier(
-    getHabitsUseCase: ref.watch(getHabitsUseCaseProvider),
-    createHabitUseCase: ref.watch(createHabitUseCaseProvider),
-    updateHabitUseCase: ref.watch(updateHabitUseCaseProvider),
-    deleteHabitUseCase: ref.watch(deleteHabitUseCaseProvider),
-    toggleArchiveUseCase: ref.watch(toggleArchiveHabitUseCaseProvider),
-    toggleHabitLogUseCase: ref.watch(toggleHabitLogUseCaseProvider),
-    completionStorage: ref.watch(habitCompletionStorageProvider),
-  );
-});
+      return HabitsNotifier(
+        getHabitsUseCase: ref.watch(getHabitsUseCaseProvider),
+        createHabitUseCase: ref.watch(createHabitUseCaseProvider),
+        updateHabitUseCase: ref.watch(updateHabitUseCaseProvider),
+        deleteHabitUseCase: ref.watch(deleteHabitUseCaseProvider),
+        toggleArchiveUseCase: ref.watch(toggleArchiveHabitUseCaseProvider),
+        toggleHabitLogUseCase: ref.watch(toggleHabitLogUseCaseProvider),
+        completionStorage: ref.watch(habitCompletionStorageProvider),
+      );
+    });

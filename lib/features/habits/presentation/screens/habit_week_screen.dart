@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/presentation/widgets/week_navigator.dart';
 import '../../../../core/presentation/widgets/period_tabs.dart';
 import '../providers/habits_provider.dart';
@@ -26,9 +27,9 @@ class _HabitWeekScreenState extends ConsumerState<HabitWeekScreen> {
       await ref.read(habitsNotifierProvider.notifier).loadHabits();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load habits: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load habits: $e')));
       }
     }
   }
@@ -40,15 +41,14 @@ class _HabitWeekScreenState extends ConsumerState<HabitWeekScreen> {
 
   Future<void> _toggleHabit(int habitId, DateTime date) async {
     try {
-      await ref.read(habitsNotifierProvider.notifier).toggleHabitLog(
-            habitId,
-            date,
-          );
+      await ref
+          .read(habitsNotifierProvider.notifier)
+          .toggleHabitLog(habitId, date);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to toggle habit: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to toggle habit: $e')));
       }
     }
   }
@@ -109,10 +109,7 @@ class _HabitWeekScreenState extends ConsumerState<HabitWeekScreen> {
             const SizedBox(height: 16),
             Text('Error: ${state.error}'),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadData,
-              child: const Text('Retry'),
-            ),
+            ElevatedButton(onPressed: _loadData, child: const Text('Retry')),
           ],
         ),
       );
@@ -150,7 +147,7 @@ class _HabitWeekScreenState extends ConsumerState<HabitWeekScreen> {
               // Header row with day names
               Row(
                 children: [
-                  const SizedBox(width: 120), // Space for habit names
+                  const SizedBox(width: 100), // Space for habit names
                   ...weekDates.map((date) {
                     final dayName = [
                       'Mon',
@@ -162,24 +159,25 @@ class _HabitWeekScreenState extends ConsumerState<HabitWeekScreen> {
                       'Sun',
                     ][date.weekday - 1];
                     return SizedBox(
-                      width: 60,
+                      width: 48,
                       child: Center(
                         child: InkWell(
                           borderRadius: BorderRadius.circular(6),
-                          onTap: () => context
-                              .go('/habits/day?date=${_formatDate(date)}'),
+                          onTap: () => context.go(
+                            '/habits/day?date=${_formatDate(date)}',
+                          ),
                           child: Column(
                             children: [
                               Text(
                                 dayName,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 12,
+                                  fontSize: 11,
                                 ),
                               ),
                               Text(
-                                '${date.month}/${date.day}',
-                                style: const TextStyle(fontSize: 10),
+                                DateFormat('MMM d').format(date),
+                                style: const TextStyle(fontSize: 9),
                               ),
                             ],
                           ),
@@ -194,15 +192,16 @@ class _HabitWeekScreenState extends ConsumerState<HabitWeekScreen> {
               // Habit rows
               ...habits.map((habit) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  padding: const EdgeInsets.symmetric(vertical: 2),
                   child: Row(
                     children: [
                       SizedBox(
-                        width: 120,
+                        width: 100,
                         child: Text(
                           habit.name,
-                          style: const TextStyle(fontSize: 14),
+                          style: const TextStyle(fontSize: 12),
                           overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
                       ...weekDates.map((date) {
@@ -218,24 +217,24 @@ class _HabitWeekScreenState extends ConsumerState<HabitWeekScreen> {
                           ),
                         );
                         return SizedBox(
-                          width: 60,
-                          height: 50,
+                          width: 48,
+                          height: 40,
                           child: Center(
                             child: InkWell(
                               onTap: isPending
                                   ? null
                                   : () => _toggleHabit(habit.id, date),
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(6),
                               child: Opacity(
                                 opacity: isPending ? 0.5 : 1.0,
                                 child: Container(
-                                  width: 50,
-                                  height: 50,
+                                  width: 40,
+                                  height: 40,
                                   decoration: BoxDecoration(
                                     color: isCompleted
                                         ? Colors.green.withValues(alpha: 0.2)
                                         : Colors.grey.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
                                       color: isCompleted
                                           ? Colors.green
@@ -248,7 +247,7 @@ class _HabitWeekScreenState extends ConsumerState<HabitWeekScreen> {
                                     color: isCompleted
                                         ? Colors.green
                                         : Colors.grey,
-                                    size: 24,
+                                    size: 20,
                                   ),
                                 ),
                               ),
