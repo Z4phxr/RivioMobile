@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:dio/dio.dart';
 import '../../../../core/storage/secure_storage_service.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/entities/tokens.dart';
@@ -28,6 +30,7 @@ class AuthRepositoryImpl implements AuthRepository {
       accessToken: response.access,
       refreshToken: response.refresh,
     );
+    debugPrint('🔐 AuthRepository: Tokens saved after login');
 
     return (
       user: response.toUserEntity(),
@@ -53,6 +56,7 @@ class AuthRepositoryImpl implements AuthRepository {
       accessToken: response.access,
       refreshToken: response.refresh,
     );
+    debugPrint('🔐 AuthRepository: Tokens saved after registration');
 
     return (
       user: response.toUserEntity(),
@@ -62,28 +66,47 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
+    debugPrint('🚪 AuthRepository: Logging out...');
     try {
       // Get refresh token before clearing it
       final refreshToken = await secureStorage.getRefreshToken();
       if (refreshToken != null) {
         await remoteDatasource.logout(refreshToken);
+        debugPrint('✅ AuthRepository: Server logout successful');
       }
     } finally {
       // Always clear tokens even if API call fails
       await secureStorage.clearTokens();
+      debugPrint('🧹 AuthRepository: Tokens cleared from storage');
     }
   }
 
   @override
   Future<User?> getCurrentUser() async {
     final hasTokens = await secureStorage.hasTokens();
-    if (!hasTokens) return null;
+    if (!hasTokens) {
+      debugPrint('❌ AuthRepository: No tokens found in storage');
+      return null;
+    }
 
+    debugPrint('✅ AuthRepository: Tokens found, verifying with server...');
     try {
       final userDto = await remoteDatasource.getCurrentUser();
+      debugPrint('✅ AuthRepository: User verified - ${userDto.username}');
       return userDto.toEntity();
+    } on DioException catch (e) {
+      // Only clear tokens on auth errors (401, 403)
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
+        debugPrint('🚫 AuthRepository: Auth error (${e.response?.statusCode}), clearing tokens');
+        await secureStorage.clearTokens();
+        return null;
+      }
+      // Don't clear tokens on network errors - user might be offline
+      debugPrint('⚠️ AuthRepository: Network error, keeping tokens: $e');
+      rethrow;
     } catch (e) {
-      // If fetching user fails, clear invalid tokens
+      // Unexpected error - clear tokens to be safe
+      debugPrint('❌ AuthRepository: Unexpected error, clearing tokens: $e');
       await secureStorage.clearTokens();
       return null;
     }

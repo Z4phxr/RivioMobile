@@ -9,4 +9,9 @@ class GetHabitsUseCase {
   Future<List<Habit>> call() {
     return repository.getHabits();
   }
+
+  /// Fetch habits with their completion logs
+  Future<({List<Habit> habits, Map<String, bool> completions})> callWithCompletions() {
+    return repository.getHabitsWithCompletions();
+  }
 }

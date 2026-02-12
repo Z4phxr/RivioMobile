@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker/core/config/api_config.dart';
 import 'package:habit_tracker/core/network/interceptors/auth_interceptor.dart';
 import 'package:habit_tracker/core/network/interceptors/token_refresh_interceptor.dart';
 import 'package:habit_tracker/core/network/interceptors/logging_interceptor.dart';
 import 'package:habit_tracker/core/storage/secure_storage_service.dart';
+import 'package:habit_tracker/features/auth/presentation/providers/auth_provider.dart';
 
 class ApiClient {
   late final Dio _dio;
@@ -105,7 +107,9 @@ final apiClientProvider = Provider<ApiClient>((ref) {
   return ApiClient(
     storage,
     () {
-      // Token refresh failed, will be handled by auth provider
+      // Token refresh failed - notify auth provider to clear state
+      debugPrint(' ApiClient: Token refresh failed, clearing auth state');
+      ref.read(authNotifierProvider.notifier).handleTokenRefreshFailure();
     },
   );
 });

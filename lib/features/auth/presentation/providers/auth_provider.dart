@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/storage/secure_storage_service.dart';
@@ -100,24 +101,43 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> checkAuthStatus() async {
+    debugPrint('🔐 AuthNotifier: Checking auth status...');
     state = state.copyWith(isLoading: true);
     try {
       final user = await getCurrentUserUseCase();
-      state = AuthState(user: user, isLoading: false);
+      if (user != null) {
+        debugPrint('✅ AuthNotifier: User authenticated - ${user.username}');
+        state = AuthState(user: user, isLoading: false);
+      } else {
+        debugPrint('❌ AuthNotifier: No valid session found');
+        state = const AuthState(isLoading: false);
+      }
     } catch (e) {
+      // Don't clear auth on temporary network errors
+      // Only clear if it's an auth error (401/403)
+      debugPrint(' AuthNotifier: Auth check failed - $e');
       state = const AuthState(isLoading: false);
     }
+  }
+
+  /// Called when token refresh fails - force logout
+  void handleTokenRefreshFailure() {
+    debugPrint('🚫 AuthNotifier: Token refresh failed, forcing logout');
+    state = const AuthState();
   }
 
   Future<void> login({
     required String username,
     required String password,
   }) async {
+    debugPrint('🔐 AuthNotifier: Attempting login for user: $username');
     state = state.copyWith(isLoading: true, error: '');
     try {
       final result = await loginUseCase(username: username, password: password);
+      debugPrint('✅ AuthNotifier: Login successful - ${result.user.username}');
       state = AuthState(user: result.user, isLoading: false);
     } catch (e) {
+      debugPrint('❌ AuthNotifier: Login failed - $e');
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),
@@ -149,8 +169,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> logout() async {
+    debugPrint('🚪 AuthNotifier: Logging out user');
     await logoutUseCase();
     state = const AuthState();
+    debugPrint('✅ AuthNotifier: Logout complete');
   }
 
   /// Invalidate all domain data providers on logout

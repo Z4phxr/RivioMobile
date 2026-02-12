@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:habit_tracker/core/config/api_config.dart';
 import 'package:habit_tracker/core/storage/secure_storage_service.dart';
 
@@ -24,23 +25,29 @@ class TokenRefreshInterceptor extends Interceptor {
       return handler.next(err);
     }
 
+    debugPrint('🔄 TokenRefreshInterceptor: Got 401 for ${err.requestOptions.path}');
+
     // Don't retry auth endpoints
     if (err.requestOptions.path.contains('/auth/')) {
+      debugPrint('⚠️ TokenRefreshInterceptor: Skipping refresh for auth endpoint');
       return handler.next(err);
     }
 
     // If already refreshing, queue this request
     if (_isRefreshing) {
+      debugPrint('⏳ TokenRefreshInterceptor: Queueing request while refresh in progress');
       _pendingRequests.add((options: err.requestOptions, handler: handler));
       return;
     }
 
     _isRefreshing = true;
+    debugPrint('🔄 TokenRefreshInterceptor: Starting token refresh...');
 
     try {
       // Get refresh token
       final refreshToken = await _storage.getRefreshToken();
       if (refreshToken == null) {
+        debugPrint('❌ TokenRefreshInterceptor: No refresh token available');
         throw Exception('No refresh token available');
       }
 
@@ -60,12 +67,14 @@ class TokenRefreshInterceptor extends Interceptor {
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
       );
+      debugPrint('✅ TokenRefreshInterceptor: Token refresh successful');
 
       // Retry original request
       final retryResponse = await _retryRequest(err.requestOptions);
       handler.resolve(retryResponse);
 
       // Retry all pending requests
+      debugPrint('🔄 TokenRefreshInterceptor: Retrying ${_pendingRequests.length} pending requests');
       for (final pending in _pendingRequests) {
         try {
           final response = await _retryRequest(pending.options);
@@ -81,6 +90,7 @@ class TokenRefreshInterceptor extends Interceptor {
       }
       _pendingRequests.clear();
     } catch (refreshError) {
+      debugPrint('❌ TokenRefreshInterceptor: Token refresh failed - $refreshError');
       // Refresh failed - clear tokens and notify app
       await _storage.clearTokens();
       _onRefreshFailed();
