@@ -57,12 +57,12 @@ class SleepLogDto {
   }
 
   SleepLog toEntity() => SleepLog(
-    id: id,
-    start: start,
-    end: end,
-    duration: duration,
-    sleepDate: sleepDate,
-  );
+        id: id,
+        start: start,
+        end: end,
+        duration: duration,
+        sleepDate: sleepDate,
+      );
 }
 
 class SleepLogCreateRequest {

@@ -47,8 +47,8 @@ class DateNavigator extends StatelessWidget {
                   Text(
                     DateFormat('EEEE, MMM d, yyyy').format(selectedDate),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ],
               ),

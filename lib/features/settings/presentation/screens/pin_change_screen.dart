@@ -45,9 +45,7 @@ class _PinChangeScreenState extends ConsumerState<PinChangeScreen> {
       return;
     }
 
-    final success = await ref
-        .read(pinLockProvider.notifier)
-        .changePin(
+    final success = await ref.read(pinLockProvider.notifier).changePin(
           _oldPinController.text,
           _newPinController.text,
           _confirmController.text,

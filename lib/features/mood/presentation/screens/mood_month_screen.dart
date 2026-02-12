@@ -178,14 +178,12 @@ class _MoodMonthScreenState extends ConsumerState<MoodMonthScreen> {
                       color: backgroundColor,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color:
-                            date.day == DateTime.now().day &&
+                        color: date.day == DateTime.now().day &&
                                 date.month == DateTime.now().month &&
                                 date.year == DateTime.now().year
                             ? Colors.blue
                             : Colors.grey.shade300,
-                        width:
-                            date.day == DateTime.now().day &&
+                        width: date.day == DateTime.now().day &&
                                 date.month == DateTime.now().month &&
                                 date.year == DateTime.now().year
                             ? 2

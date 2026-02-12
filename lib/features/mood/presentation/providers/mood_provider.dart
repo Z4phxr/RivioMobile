@@ -28,9 +28,9 @@ final getMoodLogsUseCaseProvider = Provider<GetMoodLogsUseCase>((ref) {
 
 final createOrUpdateMoodLogUseCaseProvider =
     Provider<CreateOrUpdateMoodLogUseCase>((ref) {
-      final repository = ref.watch(moodRepositoryProvider);
-      return CreateOrUpdateMoodLogUseCase(repository);
-    });
+  final repository = ref.watch(moodRepositoryProvider);
+  return CreateOrUpdateMoodLogUseCase(repository);
+});
 
 final deleteMoodDayUseCaseProvider = Provider<DeleteMoodDayUseCase>((ref) {
   final repository = ref.watch(moodRepositoryProvider);

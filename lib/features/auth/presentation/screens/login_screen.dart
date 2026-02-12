@@ -38,9 +38,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     try {
-      await ref
-          .read(authNotifierProvider.notifier)
-          .login(
+      await ref.read(authNotifierProvider.notifier).login(
             username: _usernameController.text.trim(),
             password: _passwordController.text,
           );
@@ -117,15 +115,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Text(
                   'Welcome Back',
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Login to continue tracking',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                 ),
                 const SizedBox(height: 32),
 

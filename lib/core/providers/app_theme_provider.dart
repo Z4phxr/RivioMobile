@@ -30,6 +30,6 @@ class AppThemeNotifier extends StateNotifier<AppThemeDefinition> {
 /// Provider for app theme
 final appThemeProvider =
     StateNotifierProvider<AppThemeNotifier, AppThemeDefinition>((ref) {
-      final storageService = ref.watch(appThemeStorageServiceProvider);
-      return AppThemeNotifier(storageService);
-    });
+  final storageService = ref.watch(appThemeStorageServiceProvider);
+  return AppThemeNotifier(storageService);
+});
