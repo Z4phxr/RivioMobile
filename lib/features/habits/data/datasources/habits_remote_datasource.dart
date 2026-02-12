@@ -41,7 +41,10 @@ class HabitsRemoteDatasource {
 
   /// PATCH /api/habits/archive/<id>/ - Toggle archive status
   Future<HabitDto> toggleArchive(int id) async {
-    final response = await apiClient.patch(ApiConfig.habitsArchive(id));
+    final response = await apiClient.patch(
+      ApiConfig.habitsArchive(id),
+      data: {}, // Send empty object to satisfy PATCH requirements
+    );
     return HabitDto.fromJson(response.data as Map<String, dynamic>);
   }
 
@@ -50,10 +53,7 @@ class HabitsRemoteDatasource {
     final dateStr = _formatDate(date);
     final response = await apiClient.post(
       ApiConfig.habitsToggle,
-      data: {
-        'habit_id': habitId,
-        'date': dateStr,
-      },
+      data: {'habit_id': habitId, 'date': dateStr},
     );
 
     // Response is either 201 (created) or 204 (removed)

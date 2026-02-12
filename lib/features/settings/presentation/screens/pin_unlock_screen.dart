@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/providers/pin_lock_provider.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../habits/presentation/providers/habits_provider.dart';
 
 class PinUnlockScreen extends ConsumerStatefulWidget {
   const PinUnlockScreen({super.key});
@@ -72,9 +73,9 @@ class _PinUnlockScreenState extends ConsumerState<PinUnlockScreen> {
               const SizedBox(height: 8),
               Text(
                 'Enter your 4-digit PIN to unlock',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 48),
@@ -92,9 +93,7 @@ class _PinUnlockScreenState extends ConsumerState<PinUnlockScreen> {
                   letterSpacing: 24,
                   fontWeight: FontWeight.bold,
                 ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: const InputDecoration(
                   counterText: '',
                   border: OutlineInputBorder(),
@@ -142,10 +141,18 @@ class _PinUnlockScreenState extends ConsumerState<PinUnlockScreen> {
               const Spacer(),
 
               TextButton(
-                onPressed: () {
+                onPressed: () async {
+                  // Clear habit completions before logout
+                  await ref
+                      .read(habitsNotifierProvider.notifier)
+                      .clearCompletions();
+                  // Reset PIN state
                   ref.read(pinLockProvider.notifier).reset();
-                  ref.read(authNotifierProvider.notifier).logout();
-                  context.go('/');
+                  // Logout and navigate
+                  await ref.read(authNotifierProvider.notifier).logout();
+                  if (context.mounted) {
+                    context.go('/');
+                  }
                 },
                 child: const Text('Logout'),
               ),

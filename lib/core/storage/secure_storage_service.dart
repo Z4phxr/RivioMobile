@@ -73,10 +73,7 @@ class SecureStorageService {
   }
 
   Future<void> clearTokens() async {
-    await Future.wait([
-      _delete('access_token'),
-      _delete('refresh_token'),
-    ]);
+    await Future.wait([_delete('access_token'), _delete('refresh_token')]);
   }
 
   Future<bool> hasTokens() async {
@@ -89,10 +86,7 @@ class TokenPair {
   final String access;
   final String refresh;
 
-  const TokenPair({
-    required this.access,
-    required this.refresh,
-  });
+  const TokenPair({required this.access, required this.refresh});
 }
 
 // Provider

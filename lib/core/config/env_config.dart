@@ -1,10 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Application environment enum
-enum AppEnvironment {
-  development,
-  production,
-}
+enum AppEnvironment { development, production }
 
 /// Environment configuration service
 /// Handles environment detection and provides easy access to environment-specific values
@@ -95,9 +92,9 @@ class EnvironmentConfig {
 ╔════════════════════════════════════════╗
 ║     Environment Configuration         ║
 ╠════════════════════════════════════════╣
-║ Environment: $environmentName
-║ Base URL: ${baseUrl}
-║ Logging: ${enableLogging}
+  ║ Environment: $environmentName
+  ║ Base URL: $baseUrl
+  ║ Logging: $enableLogging
 ╚════════════════════════════════════════╝
 ''';
   }

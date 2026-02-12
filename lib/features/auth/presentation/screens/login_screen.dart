@@ -110,9 +110,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               children: [
                 const SizedBox(height: 16),
                 // Logo
-                const Center(
-                  child: AppLogo(size: 100),
-                ),
+                const Center(child: AppLogo(size: 100)),
                 const SizedBox(height: 24),
                 Text(
                   'Welcome Back',

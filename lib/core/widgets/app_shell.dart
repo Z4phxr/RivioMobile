@@ -6,10 +6,7 @@ import '../providers/app_theme_provider.dart';
 class AppShell extends ConsumerStatefulWidget {
   final Widget child;
 
-  const AppShell({
-    required this.child,
-    super.key,
-  });
+  const AppShell({required this.child, super.key});
 
   @override
   ConsumerState<AppShell> createState() => _AppShellState();
@@ -79,8 +76,10 @@ class _AppShellState extends ConsumerState<AppShell> {
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.check_circle_outline),
-            selectedIcon:
-                Icon(Icons.check_circle, color: appTheme.primaryColor),
+            selectedIcon: Icon(
+              Icons.check_circle,
+              color: appTheme.primaryColor,
+            ),
             label: 'Habits',
           ),
           NavigationDestination(

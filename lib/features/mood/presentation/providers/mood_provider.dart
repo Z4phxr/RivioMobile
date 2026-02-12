@@ -43,17 +43,9 @@ class MoodState {
   final bool isLoading;
   final String? error;
 
-  const MoodState({
-    this.logs = const [],
-    this.isLoading = false,
-    this.error,
-  });
+  const MoodState({this.logs = const [], this.isLoading = false, this.error});
 
-  MoodState copyWith({
-    List<MoodLog>? logs,
-    bool? isLoading,
-    String? error,
-  }) {
+  MoodState copyWith({List<MoodLog>? logs, bool? isLoading, String? error}) {
     return MoodState(
       logs: logs ?? this.logs,
       isLoading: isLoading ?? this.isLoading,
@@ -134,8 +126,9 @@ class MoodNotifier extends StateNotifier<MoodState> {
         return existingDate != dateOnly;
       }).toList();
       updatedLogs.add(correctedLog);
-      updatedLogs
-          .sort((a, b) => b.date.compareTo(a.date)); // Sort by date descending
+      updatedLogs.sort(
+        (a, b) => b.date.compareTo(a.date),
+      ); // Sort by date descending
       state = state.copyWith(logs: updatedLogs);
     } catch (e) {
       state = state.copyWith(error: e.toString());
@@ -160,12 +153,14 @@ class MoodNotifier extends StateNotifier<MoodState> {
 }
 
 // Provider
-final moodNotifierProvider =
-    StateNotifierProvider<MoodNotifier, MoodState>((ref) {
+final moodNotifierProvider = StateNotifierProvider<MoodNotifier, MoodState>((
+  ref,
+) {
   return MoodNotifier(
     getMoodLogsUseCase: ref.watch(getMoodLogsUseCaseProvider),
-    createOrUpdateMoodLogUseCase:
-        ref.watch(createOrUpdateMoodLogUseCaseProvider),
+    createOrUpdateMoodLogUseCase: ref.watch(
+      createOrUpdateMoodLogUseCaseProvider,
+    ),
     deleteMoodDayUseCase: ref.watch(deleteMoodDayUseCaseProvider),
   );
 });

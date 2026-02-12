@@ -79,20 +79,28 @@ android {
                     keyAlias = System.getenv("KEY_ALIAS")
                     keyPassword = System.getenv("KEY_PASSWORD")
                 } else {
-                    throw GradleException("Keystore file not found at: $keystoreFile")
+                    // For debug builds, use debug keystore; for release, this would fail later
+                    println("Warning: Keystore file not found at: $keystoreFile")
                 }
             } else {
                 // Local development: try key.properties
-                val propertiesFile = rootProject.file("android/key.properties")
+                val propertiesFile = rootProject.file("key.properties")
                 if (propertiesFile.exists()) {
                     val properties = Properties()
                     properties.load(propertiesFile.inputStream())
-                    storeFile = file(properties.getProperty("storeFile", ""))
-                    storePassword = properties.getProperty("storePassword", "")
-                    keyAlias = properties.getProperty("keyAlias", "")
-                    keyPassword = properties.getProperty("keyPassword", "")
+                    val storeFilePath = properties.getProperty("storeFile", "")
+                    if (storeFilePath.isNotEmpty() && file(storeFilePath).exists()) {
+                        storeFile = file(storeFilePath)
+                        storePassword = properties.getProperty("storePassword", "")
+                        keyAlias = properties.getProperty("keyAlias", "")
+                        keyPassword = properties.getProperty("keyPassword", "")
+                    } else {
+                        // For debug builds, this is OK - will use debug keystore
+                        println("Warning: Keystore file not found. Using debug keystore for debug builds.")
+                    }
                 } else {
-                    throw GradleException("Keystore file not found. Set KEYSTORE_FILE env var for CI/CD or android/key.properties for local builds")
+                    // For debug builds, this is OK - will use debug keystore
+                    println("Warning: key.properties not found. Using debug keystore for debug builds.")
                 }
             }
         }
@@ -107,13 +115,18 @@ android {
                 "proguard-rules.pro"
             )
             
-            // Use the appropriate signing config
-            signingConfig = signingConfigs.getByName(getSigningConfig())
+            // Use the appropriate signing config for release builds only
+            val signingConfigName = getSigningConfig()
+            if (signingConfigName == "release") {
+                signingConfig = signingConfigs.getByName("release")
+            }
+            // Otherwise, use default debug signing
         }
         
         debug {
             // Debug suffix is handled by flavor
             isDebuggable = true
+            // Debug builds always use debug keystore (no custom signing required)
         }
     }
 }

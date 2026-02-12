@@ -98,9 +98,7 @@ class _PinChangeScreenState extends ConsumerState<PinChangeScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Change PIN'),
-      ),
+      appBar: AppBar(title: const Text('Change PIN')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -113,16 +111,13 @@ class _PinChangeScreenState extends ConsumerState<PinChangeScreen> {
                 color: Theme.of(context).colorScheme.primary,
               ),
               const SizedBox(height: 24),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
+              Text(title, style: Theme.of(context).textTheme.headlineMedium),
               const SizedBox(height: 8),
               Text(
                 subtitle,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 48),
@@ -140,9 +135,7 @@ class _PinChangeScreenState extends ConsumerState<PinChangeScreen> {
                   letterSpacing: 24,
                   fontWeight: FontWeight.bold,
                 ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(
                   counterText: '',
                   border: const OutlineInputBorder(),

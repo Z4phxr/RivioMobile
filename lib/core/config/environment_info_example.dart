@@ -5,14 +5,12 @@ import 'package:habit_tracker/core/config/env_config.dart';
 /// Example widget showing proper usage of environment configuration
 /// This is a reference implementation - copy patterns to your own widgets
 class EnvironmentInfoExample extends StatelessWidget {
-  const EnvironmentInfoExample({Key? key}) : super(key: key);
+  const EnvironmentInfoExample({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Environment Configuration'),
-      ),
+      appBar: AppBar(title: const Text('Environment Configuration')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -140,10 +138,7 @@ class EnvironmentInfoExample extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         ...children,
@@ -152,11 +147,7 @@ class EnvironmentInfoExample extends StatelessWidget {
   }
 
   /// Build an info tile showing key-value pair
-  Widget _buildInfoTile(
-    String label,
-    String value, {
-    required bool isDev,
-  }) {
+  Widget _buildInfoTile(String label, String value, {required bool isDev}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
@@ -182,10 +173,7 @@ class EnvironmentInfoExample extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               value,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -209,23 +197,22 @@ class EnvironmentInfoExample extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.grey[900],
-              borderRadius: BorderRadius.circular(8),
-              fontFamily: 'Courier',
-            ),
-            child: Text(
-              code,
-              style: const TextStyle(
-                fontSize: 12,
-                fontFamily: 'monospace',
-                color: Colors.green,
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[900],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                code,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontFamily: 'monospace',
+                  color: Colors.green,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -238,15 +225,9 @@ class EnvironmentInfoExample extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
-          Text(
-            description,
-            style: const TextStyle(color: Colors.grey),
-          ),
+          Text(description, style: const TextStyle(color: Colors.grey)),
         ],
       ),
     );

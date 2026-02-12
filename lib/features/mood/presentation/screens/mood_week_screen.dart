@@ -31,9 +31,9 @@ class _MoodWeekScreenState extends ConsumerState<MoodWeekScreen> {
       await ref.read(moodNotifierProvider.notifier).loadMoodLogs();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load mood logs: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load mood logs: $e')));
       }
     }
   }
@@ -100,10 +100,7 @@ class _MoodWeekScreenState extends ConsumerState<MoodWeekScreen> {
             const SizedBox(height: 16),
             Text('Error: ${state.error}'),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadData,
-              child: const Text('Retry'),
-            ),
+            ElevatedButton(onPressed: _loadData, child: const Text('Retry')),
           ],
         ),
       );

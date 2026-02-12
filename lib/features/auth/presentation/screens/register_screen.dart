@@ -132,9 +132,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               children: [
                 const SizedBox(height: 16),
                 // Logo
-                const Center(
-                  child: AppLogo(size: 100),
-                ),
+                const Center(child: AppLogo(size: 100)),
                 const SizedBox(height: 24),
                 Text(
                   'Create Account',

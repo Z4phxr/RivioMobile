@@ -11,10 +11,6 @@ class CreateOrUpdateMoodLogUseCase {
     required int mood,
     String? note,
   }) {
-    return repository.createOrUpdateMoodLog(
-      date: date,
-      mood: mood,
-      note: note,
-    );
+    return repository.createOrUpdateMoodLog(date: date, mood: mood, note: note);
   }
 }

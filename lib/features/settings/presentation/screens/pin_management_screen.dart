@@ -11,9 +11,7 @@ class PinManagementScreen extends ConsumerWidget {
     final pinState = ref.watch(pinLockProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('App Lock'),
-      ),
+      appBar: AppBar(title: const Text('App Lock')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -41,9 +39,9 @@ class PinManagementScreen extends ConsumerWidget {
                     pinState.hasPinSet
                         ? 'Your app is protected with a 4-digit PIN'
                         : 'Set a PIN to protect your app',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                   ),
                 ],
               ),
@@ -91,9 +89,9 @@ class PinManagementScreen extends ConsumerWidget {
               '• The app will require your PIN when opened\n'
               '• PIN must be exactly 4 digits\n'
               '• Keep your PIN private and secure',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: Colors.grey),
             ),
           ),
         ],

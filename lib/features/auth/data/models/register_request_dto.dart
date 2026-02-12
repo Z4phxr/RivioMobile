@@ -10,10 +10,7 @@ class RegisterRequestDto {
   });
 
   Map<String, dynamic> toJson() {
-    final json = <String, dynamic>{
-      'username': username,
-      'password': password,
-    };
+    final json = <String, dynamic>{'username': username, 'password': password};
     if (email != null && email!.isNotEmpty) {
       json['email'] = email;
     }

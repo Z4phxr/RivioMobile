@@ -5,11 +5,7 @@ class ApiError implements Exception {
   final int? statusCode;
   final Map<String, List<String>>? fieldErrors;
 
-  ApiError({
-    required this.message,
-    this.statusCode,
-    this.fieldErrors,
-  });
+  ApiError({required this.message, this.statusCode, this.fieldErrors});
 
   factory ApiError.fromDioException(DioException e) {
     if (e.response?.data is Map) {

@@ -76,14 +76,8 @@ final routerProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       // Unauthenticated routes
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const LandingScreen(),
-      ),
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginScreen(),
-      ),
+      GoRoute(path: '/', builder: (context, state) => const LandingScreen()),
+      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
         path: '/register',
         builder: (context, state) => const RegisterScreen(),
