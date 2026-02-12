@@ -1,11 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/providers/app_theme_provider.dart';
+import '../providers/auth_provider.dart';
 
-class LandingScreen extends StatelessWidget {
+class LandingScreen extends ConsumerWidget {
   const LandingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authNotifierProvider);
+    final appTheme = ref.watch(appThemeProvider);
+
+    // Show loading splash while checking auth status
+    if (authState.isLoading) {
+      return Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: appTheme.gradient,
+          ),
+          child: const Center(
+            child: CircularProgressIndicator(color: Colors.white),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       body: SafeArea(
         child: Padding(
