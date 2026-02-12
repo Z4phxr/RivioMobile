@@ -11,12 +11,7 @@ class HabitLog {
     required this.completed,
   });
 
-  HabitLog copyWith({
-    int? id,
-    int? habitId,
-    DateTime? date,
-    bool? completed,
-  }) {
+  HabitLog copyWith({int? id, int? habitId, DateTime? date, bool? completed}) {
     return HabitLog(
       id: id ?? this.id,
       habitId: habitId ?? this.habitId,

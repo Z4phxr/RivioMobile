@@ -161,15 +161,15 @@ class _SleepDayScreenSimpleState extends ConsumerState<SleepDayScreenSimple> {
       // Reload data after save
       await ref.read(sleepNotifierProvider.notifier).loadSleepLogs();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sleep log saved')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Sleep log saved')));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to save: $e')));
       }
     }
   }
@@ -180,9 +180,9 @@ class _SleepDayScreenSimpleState extends ConsumerState<SleepDayScreenSimple> {
     final log = state.getLogForDate(_selectedDate);
 
     if (log == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No sleep log to delete')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('No sleep log to delete')));
       return;
     }
 
@@ -219,16 +219,16 @@ class _SleepDayScreenSimpleState extends ConsumerState<SleepDayScreenSimple> {
         // Reload data after delete
         await ref.read(sleepNotifierProvider.notifier).loadSleepLogs();
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Sleep log deleted')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Sleep log deleted')));
         }
         _updateTimesFromLog(); // Reset to defaults
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to delete: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Failed to delete: $e')));
         }
       }
     }
@@ -278,8 +278,10 @@ class _SleepDayScreenSimpleState extends ConsumerState<SleepDayScreenSimple> {
                         // Bed Time
                         Card(
                           child: ListTile(
-                            leading:
-                                const Icon(Icons.bedtime, color: Colors.indigo),
+                            leading: const Icon(
+                              Icons.bedtime,
+                              color: Colors.indigo,
+                            ),
                             title: const Text('Bed Time'),
                             subtitle: Text(
                               _bedTime.format(context),

@@ -32,10 +32,7 @@ class AuthRepositoryImpl implements AuthRepository {
     );
     debugPrint('🔐 AuthRepository: Tokens saved after login');
 
-    return (
-      user: response.toUserEntity(),
-      tokens: response.toTokensEntity(),
-    );
+    return (user: response.toUserEntity(), tokens: response.toTokensEntity());
   }
 
   @override
@@ -58,10 +55,7 @@ class AuthRepositoryImpl implements AuthRepository {
     );
     debugPrint('🔐 AuthRepository: Tokens saved after registration');
 
-    return (
-      user: response.toUserEntity(),
-      tokens: response.toTokensEntity(),
-    );
+    return (user: response.toUserEntity(), tokens: response.toTokensEntity());
   }
 
   @override
@@ -97,7 +91,9 @@ class AuthRepositoryImpl implements AuthRepository {
     } on DioException catch (e) {
       // Only clear tokens on auth errors (401, 403)
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
-        debugPrint('🚫 AuthRepository: Auth error (${e.response?.statusCode}), clearing tokens');
+        debugPrint(
+          '🚫 AuthRepository: Auth error (${e.response?.statusCode}), clearing tokens',
+        );
         await secureStorage.clearTokens();
         return null;
       }

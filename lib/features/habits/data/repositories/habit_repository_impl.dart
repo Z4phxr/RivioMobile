@@ -15,19 +15,22 @@ class HabitRepositoryImpl implements HabitRepository {
   }
 
   @override
-  Future<({List<Habit> habits, Map<String, bool> completions})> getHabitsWithCompletions() async {
+  Future<({List<Habit> habits, Map<String, bool> completions})>
+  getHabitsWithCompletions() async {
     debugPrint('📋 HabitRepository: Fetching habits with completions...');
     final dtos = await remoteDatasource.getHabits();
-    
+
     final habits = dtos.map((dto) => dto.toEntity()).toList();
-    
+
     // Merge all completion maps from all habits
     final completions = <String, bool>{};
     for (final dto in dtos) {
       completions.addAll(dto.getCompletionMap());
     }
-    
-    debugPrint('✅ HabitRepository: Loaded ${habits.length} habits with ${completions.length} completions');
+
+    debugPrint(
+      '✅ HabitRepository: Loaded ${habits.length} habits with ${completions.length} completions',
+    );
     return (habits: habits, completions: completions);
   }
 

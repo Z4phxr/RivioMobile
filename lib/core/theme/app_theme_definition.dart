@@ -22,10 +22,10 @@ class AppThemeDefinition {
 
   /// Create linear gradient from theme colors
   LinearGradient get gradient => LinearGradient(
-        colors: [gradientStart, gradientEnd],
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
-      );
+    colors: [gradientStart, gradientEnd],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  );
 
   /// Get background image path
   String get backgroundImagePath => 'assets/backgrounds/$backgroundImage';

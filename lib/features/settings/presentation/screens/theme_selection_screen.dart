@@ -113,11 +113,7 @@ class _ThemeTile extends StatelessWidget {
 
               // Selected indicator
               if (isSelected)
-                Icon(
-                  Icons.check_circle,
-                  color: theme.primaryColor,
-                  size: 24,
-                )
+                Icon(Icons.check_circle, color: theme.primaryColor, size: 24)
               else
                 const SizedBox(height: 24),
             ],

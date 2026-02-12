@@ -7,10 +7,7 @@ import '../../../../core/providers/pin_lock_provider.dart';
 class PinSetupScreen extends ConsumerStatefulWidget {
   final bool isAfterRegistration;
 
-  const PinSetupScreen({
-    super.key,
-    this.isAfterRegistration = false,
-  });
+  const PinSetupScreen({super.key, this.isAfterRegistration = false});
 
   @override
   ConsumerState<PinSetupScreen> createState() => _PinSetupScreenState();
@@ -45,10 +42,9 @@ class _PinSetupScreenState extends ConsumerState<PinSetupScreen> {
       return;
     }
 
-    final success = await ref.read(pinLockProvider.notifier).setPin(
-          _pinController.text,
-          _confirmController.text,
-        );
+    final success = await ref
+        .read(pinLockProvider.notifier)
+        .setPin(_pinController.text, _confirmController.text);
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -82,12 +78,7 @@ class _PinSetupScreenState extends ConsumerState<PinSetupScreen> {
       appBar: AppBar(
         title: const Text('Set PIN'),
         actions: widget.isAfterRegistration
-            ? [
-                TextButton(
-                  onPressed: _handleSkip,
-                  child: const Text('Skip'),
-                ),
-              ]
+            ? [TextButton(onPressed: _handleSkip, child: const Text('Skip'))]
             : null,
       ),
       body: SafeArea(
@@ -111,9 +102,9 @@ class _PinSetupScreenState extends ConsumerState<PinSetupScreen> {
                 _showConfirm
                     ? 'Enter your PIN again to confirm'
                     : 'Enter a 4-digit PIN to secure your app',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 48),
@@ -132,9 +123,7 @@ class _PinSetupScreenState extends ConsumerState<PinSetupScreen> {
                     letterSpacing: 24,
                     fontWeight: FontWeight.bold,
                   ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: const InputDecoration(
                     counterText: '',
                     border: OutlineInputBorder(),
@@ -186,9 +175,7 @@ class _PinSetupScreenState extends ConsumerState<PinSetupScreen> {
                     letterSpacing: 24,
                     fontWeight: FontWeight.bold,
                   ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: const InputDecoration(
                     counterText: '',
                     border: OutlineInputBorder(),
@@ -252,9 +239,9 @@ class _PinSetupScreenState extends ConsumerState<PinSetupScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
                     'You can always set a PIN later from Settings',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: Colors.grey),
                     textAlign: TextAlign.center,
                   ),
                 ),

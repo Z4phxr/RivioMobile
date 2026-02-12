@@ -20,11 +20,7 @@ class PinLockState {
     this.error,
   });
 
-  PinLockState copyWith({
-    bool? hasPinSet,
-    bool? isUnlocked,
-    String? error,
-  }) {
+  PinLockState copyWith({bool? hasPinSet, bool? isUnlocked, String? error}) {
     return PinLockState(
       hasPinSet: hasPinSet ?? this.hasPinSet,
       isUnlocked: isUnlocked ?? this.isUnlocked,
@@ -150,8 +146,9 @@ class PinLockNotifier extends StateNotifier<PinLockState> {
 }
 
 /// Provider for PIN lock state
-final pinLockProvider =
-    StateNotifierProvider<PinLockNotifier, PinLockState>((ref) {
+final pinLockProvider = StateNotifierProvider<PinLockNotifier, PinLockState>((
+  ref,
+) {
   final pinStorage = ref.watch(pinStorageServiceProvider);
   return PinLockNotifier(pinStorage);
 });

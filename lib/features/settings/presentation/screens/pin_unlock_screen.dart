@@ -73,9 +73,9 @@ class _PinUnlockScreenState extends ConsumerState<PinUnlockScreen> {
               const SizedBox(height: 8),
               Text(
                 'Enter your 4-digit PIN to unlock',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 48),
@@ -93,9 +93,7 @@ class _PinUnlockScreenState extends ConsumerState<PinUnlockScreen> {
                   letterSpacing: 24,
                   fontWeight: FontWeight.bold,
                 ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: const InputDecoration(
                   counterText: '',
                   border: OutlineInputBorder(),
@@ -145,7 +143,9 @@ class _PinUnlockScreenState extends ConsumerState<PinUnlockScreen> {
               TextButton(
                 onPressed: () async {
                   // Clear habit completions before logout
-                  await ref.read(habitsNotifierProvider.notifier).clearCompletions();
+                  await ref
+                      .read(habitsNotifierProvider.notifier)
+                      .clearCompletions();
                   // Reset PIN state
                   ref.read(pinLockProvider.notifier).reset();
                   // Logout and navigate

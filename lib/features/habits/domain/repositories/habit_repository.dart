@@ -6,7 +6,8 @@ abstract class HabitRepository {
 
   /// Fetch all habits with their completion logs
   /// Returns habits and a map of completions (habitId_date -> isCompleted)
-  Future<({List<Habit> habits, Map<String, bool> completions})> getHabitsWithCompletions();
+  Future<({List<Habit> habits, Map<String, bool> completions})>
+  getHabitsWithCompletions();
 
   /// Create a new habit
   Future<Habit> createHabit(String name);

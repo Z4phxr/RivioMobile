@@ -15,15 +15,17 @@ Future<void> main() async {
 
   // Decide env file WITHOUT reading dotenv first
   const env = String.fromEnvironment('ENV', defaultValue: 'development');
-  final envFileName =
-      env == 'production' ? '.env.production' : '.env.development';
+  final envFileName = env == 'production'
+      ? '.env.production'
+      : '.env.development';
 
   try {
     await dotenv.load(fileName: envFileName);
     debugPrint('✓ Loaded environment from: $envFileName');
   } catch (e) {
     debugPrint(
-        '⚠ Warning: Could not load $envFileName, using default configuration');
+      '⚠ Warning: Could not load $envFileName, using default configuration',
+    );
   }
 
   // Now it's safe to read EnvironmentConfig (it can read dotenv)

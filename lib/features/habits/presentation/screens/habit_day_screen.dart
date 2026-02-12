@@ -36,24 +36,23 @@ class _HabitDayScreenState extends ConsumerState<HabitDayScreen> {
       await ref.read(habitsNotifierProvider.notifier).loadHabits();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load habits: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load habits: $e')));
       }
     }
   }
 
   Future<void> _toggleHabit(int habitId) async {
     try {
-      await ref.read(habitsNotifierProvider.notifier).toggleHabitLog(
-            habitId,
-            _selectedDate,
-          );
+      await ref
+          .read(habitsNotifierProvider.notifier)
+          .toggleHabitLog(habitId, _selectedDate);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to toggle habit: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to toggle habit: $e')));
       }
     }
   }
@@ -119,10 +118,7 @@ class _HabitDayScreenState extends ConsumerState<HabitDayScreen> {
             const SizedBox(height: 16),
             Text('Error: ${state.error}'),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadData,
-              child: const Text('Retry'),
-            ),
+            ElevatedButton(onPressed: _loadData, child: const Text('Retry')),
           ],
         ),
       );
@@ -157,12 +153,14 @@ class _HabitDayScreenState extends ConsumerState<HabitDayScreen> {
         // Use ref.watch to rebuild when state changes (including optimistic updates)
         final key = '${habit.id}_${_formatDate(_selectedDate)}';
         final isCompleted = ref.watch(
-          habitsNotifierProvider
-              .select((state) => state.optimisticToggles[key] ?? false),
+          habitsNotifierProvider.select(
+            (state) => state.optimisticToggles[key] ?? false,
+          ),
         );
         final isPending = ref.watch(
-          habitsNotifierProvider
-              .select((state) => state.pendingToggles.contains(key)),
+          habitsNotifierProvider.select(
+            (state) => state.pendingToggles.contains(key),
+          ),
         );
 
         return Card(

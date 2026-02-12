@@ -53,10 +53,7 @@ class HabitsRemoteDatasource {
     final dateStr = _formatDate(date);
     final response = await apiClient.post(
       ApiConfig.habitsToggle,
-      data: {
-        'habit_id': habitId,
-        'date': dateStr,
-      },
+      data: {'habit_id': habitId, 'date': dateStr},
     );
 
     // Response is either 201 (created) or 204 (removed)

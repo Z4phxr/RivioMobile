@@ -44,11 +44,7 @@ class UserDto {
   final String username;
   final String? email;
 
-  const UserDto({
-    required this.id,
-    required this.username,
-    this.email,
-  });
+  const UserDto({required this.id, required this.username, this.email});
 
   factory UserDto.fromJson(Map<String, dynamic> json) {
     // Handle Django format with user_id
@@ -68,9 +64,5 @@ class UserDto {
     );
   }
 
-  User toEntity() => User(
-        id: id,
-        username: username,
-        email: email,
-      );
+  User toEntity() => User(id: id, username: username, email: email);
 }

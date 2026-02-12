@@ -27,9 +27,9 @@ class _HabitWeekScreenState extends ConsumerState<HabitWeekScreen> {
       await ref.read(habitsNotifierProvider.notifier).loadHabits();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load habits: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load habits: $e')));
       }
     }
   }
@@ -41,15 +41,14 @@ class _HabitWeekScreenState extends ConsumerState<HabitWeekScreen> {
 
   Future<void> _toggleHabit(int habitId, DateTime date) async {
     try {
-      await ref.read(habitsNotifierProvider.notifier).toggleHabitLog(
-            habitId,
-            date,
-          );
+      await ref
+          .read(habitsNotifierProvider.notifier)
+          .toggleHabitLog(habitId, date);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to toggle habit: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to toggle habit: $e')));
       }
     }
   }
@@ -110,10 +109,7 @@ class _HabitWeekScreenState extends ConsumerState<HabitWeekScreen> {
             const SizedBox(height: 16),
             Text('Error: ${state.error}'),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadData,
-              child: const Text('Retry'),
-            ),
+            ElevatedButton(onPressed: _loadData, child: const Text('Retry')),
           ],
         ),
       );
@@ -167,8 +163,9 @@ class _HabitWeekScreenState extends ConsumerState<HabitWeekScreen> {
                       child: Center(
                         child: InkWell(
                           borderRadius: BorderRadius.circular(6),
-                          onTap: () => context
-                              .go('/habits/day?date=${_formatDate(date)}'),
+                          onTap: () => context.go(
+                            '/habits/day?date=${_formatDate(date)}',
+                          ),
                           child: Column(
                             children: [
                               Text(

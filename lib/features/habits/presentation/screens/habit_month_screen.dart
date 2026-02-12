@@ -26,9 +26,9 @@ class _HabitMonthScreenState extends ConsumerState<HabitMonthScreen> {
       await ref.read(habitsNotifierProvider.notifier).loadHabits();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load habits: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load habits: $e')));
       }
     }
   }
@@ -121,10 +121,7 @@ class _HabitMonthScreenState extends ConsumerState<HabitMonthScreen> {
             const SizedBox(height: 16),
             Text('Error: ${state.error}'),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadData,
-              child: const Text('Retry'),
-            ),
+            ElevatedButton(onPressed: _loadData, child: const Text('Retry')),
           ],
         ),
       );
@@ -152,8 +149,11 @@ class _HabitMonthScreenState extends ConsumerState<HabitMonthScreen> {
     }
 
     // Build calendar grid
-    final firstDayOfMonth =
-        DateTime(_selectedDate.year, _selectedDate.month, 1);
+    final firstDayOfMonth = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      1,
+    );
     final firstWeekday = firstDayOfMonth.weekday;
     final daysInMonth = monthDays.length;
 
@@ -209,12 +209,14 @@ class _HabitMonthScreenState extends ConsumerState<HabitMonthScreen> {
                       color: _getCompletionColor(ratio, context),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: date.day == DateTime.now().day &&
+                        color:
+                            date.day == DateTime.now().day &&
                                 date.month == DateTime.now().month &&
                                 date.year == DateTime.now().year
                             ? Colors.blue
                             : Colors.grey.shade300,
-                        width: date.day == DateTime.now().day &&
+                        width:
+                            date.day == DateTime.now().day &&
                                 date.month == DateTime.now().month &&
                                 date.year == DateTime.now().year
                             ? 2

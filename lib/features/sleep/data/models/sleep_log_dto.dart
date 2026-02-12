@@ -57,27 +57,21 @@ class SleepLogDto {
   }
 
   SleepLog toEntity() => SleepLog(
-        id: id,
-        start: start,
-        end: end,
-        duration: duration,
-        sleepDate: sleepDate,
-      );
+    id: id,
+    start: start,
+    end: end,
+    duration: duration,
+    sleepDate: sleepDate,
+  );
 }
 
 class SleepLogCreateRequest {
   final DateTime start;
   final DateTime end;
 
-  const SleepLogCreateRequest({
-    required this.start,
-    required this.end,
-  });
+  const SleepLogCreateRequest({required this.start, required this.end});
 
   Map<String, dynamic> toJson() {
-    return {
-      'start': start.toIso8601String(),
-      'end': end.toIso8601String(),
-    };
+    return {'start': start.toIso8601String(), 'end': end.toIso8601String()};
   }
 }

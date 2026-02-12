@@ -42,17 +42,9 @@ class SleepState {
   final bool isLoading;
   final String? error;
 
-  const SleepState({
-    this.logs = const [],
-    this.isLoading = false,
-    this.error,
-  });
+  const SleepState({this.logs = const [], this.isLoading = false, this.error});
 
-  SleepState copyWith({
-    List<SleepLog>? logs,
-    bool? isLoading,
-    String? error,
-  }) {
+  SleepState copyWith({List<SleepLog>? logs, bool? isLoading, String? error}) {
     return SleepState(
       logs: logs ?? this.logs,
       isLoading: isLoading ?? this.isLoading,
@@ -64,8 +56,11 @@ class SleepState {
   SleepLog? getLogForDate(DateTime date) {
     final dateOnly = DateTime(date.year, date.month, date.day);
     return logs.where((log) {
-      final logDate =
-          DateTime(log.sleepDate.year, log.sleepDate.month, log.sleepDate.day);
+      final logDate = DateTime(
+        log.sleepDate.year,
+        log.sleepDate.month,
+        log.sleepDate.day,
+      );
       return logDate == dateOnly;
     }).firstOrNull;
   }
@@ -108,8 +103,11 @@ class SleepNotifier extends StateNotifier<SleepState> {
     try {
       final log = await createSleepLogUseCase(start, end);
       // Remove any existing logs for the same date and add new one
-      final dateOnly =
-          DateTime(log.sleepDate.year, log.sleepDate.month, log.sleepDate.day);
+      final dateOnly = DateTime(
+        log.sleepDate.year,
+        log.sleepDate.month,
+        log.sleepDate.day,
+      );
       final updatedLogs = state.logs.where((existingLog) {
         final existingDate = DateTime(
           existingLog.sleepDate.year,
@@ -150,8 +148,9 @@ class SleepNotifier extends StateNotifier<SleepState> {
 }
 
 // Provider
-final sleepNotifierProvider =
-    StateNotifierProvider<SleepNotifier, SleepState>((ref) {
+final sleepNotifierProvider = StateNotifierProvider<SleepNotifier, SleepState>((
+  ref,
+) {
   return SleepNotifier(
     getSleepLogsUseCase: ref.watch(getSleepLogsUseCaseProvider),
     createSleepLogUseCase: ref.watch(createSleepLogUseCaseProvider),

@@ -40,9 +40,9 @@ class WeekNavigator extends StatelessWidget {
             child: Text(
               '${weekStart.month}/${weekStart.day} - ${weekEnd.month}/${weekEnd.day}',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
           IconButton(

@@ -17,19 +17,11 @@ class AuthState {
   final bool isLoading;
   final String? error;
 
-  const AuthState({
-    this.user,
-    this.isLoading = false,
-    this.error,
-  });
+  const AuthState({this.user, this.isLoading = false, this.error});
 
   bool get isAuthenticated => user != null;
 
-  AuthState copyWith({
-    User? user,
-    bool? isLoading,
-    String? error,
-  }) {
+  AuthState copyWith({User? user, bool? isLoading, String? error}) {
     return AuthState(
       user: user ?? this.user,
       isLoading: isLoading ?? this.isLoading,
@@ -137,10 +129,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = AuthState(user: result.user, isLoading: false);
     } catch (e) {
       debugPrint('❌ AuthNotifier: Login failed - $e');
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
       rethrow;
     }
   }
@@ -159,10 +148,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
       state = AuthState(user: result.user, isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
       rethrow;
     }
   }
@@ -186,8 +172,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 }
 
-final authNotifierProvider =
-    StateNotifierProvider<AuthNotifier, AuthState>((ref) {
+final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>((
+  ref,
+) {
   return AuthNotifier(
     loginUseCase: ref.watch(loginUseCaseProvider),
     registerUseCase: ref.watch(registerUseCaseProvider),

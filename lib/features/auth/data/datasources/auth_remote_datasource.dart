@@ -36,10 +36,7 @@ class AuthRemoteDatasource {
   /// Requires: Authorization header with access token
   /// Body: {"refresh": "refresh_token_string"}
   Future<void> logout(String refreshToken) async {
-    await apiClient.post(
-      ApiConfig.authLogout,
-      data: {'refresh': refreshToken},
-    );
+    await apiClient.post(ApiConfig.authLogout, data: {'refresh': refreshToken});
   }
 
   Future<UserDto> getCurrentUser() async {

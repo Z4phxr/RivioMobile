@@ -25,9 +25,9 @@ class _EditHabitsScreenState extends ConsumerState<EditHabitsScreen> {
       await ref.read(habitsNotifierProvider.notifier).loadHabits();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load habits: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load habits: $e')));
       }
     }
   }
@@ -47,9 +47,9 @@ class _EditHabitsScreenState extends ConsumerState<EditHabitsScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to add habit: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to add habit: $e')));
       }
     }
   }
@@ -58,15 +58,15 @@ class _EditHabitsScreenState extends ConsumerState<EditHabitsScreen> {
     try {
       await ref.read(habitsNotifierProvider.notifier).updateHabit(id, newName);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Habit updated')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Habit updated')));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update habit: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to update habit: $e')));
       }
     }
   }
@@ -76,8 +76,9 @@ class _EditHabitsScreenState extends ConsumerState<EditHabitsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete Habit'),
-        content:
-            Text('Delete "$name" and all its logs? This cannot be undone.'),
+        content: Text(
+          'Delete "$name" and all its logs? This cannot be undone.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -96,15 +97,15 @@ class _EditHabitsScreenState extends ConsumerState<EditHabitsScreen> {
       try {
         await ref.read(habitsNotifierProvider.notifier).deleteHabit(id);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Habit deleted')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Habit deleted')));
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to delete habit: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Failed to delete habit: $e')));
         }
       }
     }
@@ -120,9 +121,9 @@ class _EditHabitsScreenState extends ConsumerState<EditHabitsScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to toggle archive: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to toggle archive: $e')));
       }
     }
   }
@@ -195,8 +196,9 @@ class _EditHabitsScreenState extends ConsumerState<EditHabitsScreen> {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 8),
-                    ...state.activeHabits
-                        .map((habit) => _buildHabitCard(habit, false)),
+                    ...state.activeHabits.map(
+                      (habit) => _buildHabitCard(habit, false),
+                    ),
                   ],
 
                   // Archived habits
@@ -207,8 +209,9 @@ class _EditHabitsScreenState extends ConsumerState<EditHabitsScreen> {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 8),
-                    ...state.archivedHabits
-                        .map((habit) => _buildHabitCard(habit, true)),
+                    ...state.archivedHabits.map(
+                      (habit) => _buildHabitCard(habit, true),
+                    ),
                   ],
 
                   // Empty state
@@ -221,10 +224,9 @@ class _EditHabitsScreenState extends ConsumerState<EditHabitsScreen> {
                           Icon(
                             Icons.check_circle_outline,
                             size: 64,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withValues(alpha: 0.5),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primary.withValues(alpha: 0.5),
                           ),
                           const SizedBox(height: 16),
                           Text(
@@ -263,8 +265,10 @@ class _EditHabitsScreenState extends ConsumerState<EditHabitsScreen> {
                 controller: controller,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                 ),
                 onSubmitted: (value) => _updateHabit(habit.id, value),
               ),

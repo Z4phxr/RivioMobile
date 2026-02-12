@@ -10,13 +10,9 @@ class TokenRefreshInterceptor extends Interceptor {
 
   bool _isRefreshing = false;
   final List<({RequestOptions options, ErrorInterceptorHandler handler})>
-      _pendingRequests = [];
+  _pendingRequests = [];
 
-  TokenRefreshInterceptor(
-    this._dio,
-    this._storage,
-    this._onRefreshFailed,
-  );
+  TokenRefreshInterceptor(this._dio, this._storage, this._onRefreshFailed);
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
@@ -25,17 +21,23 @@ class TokenRefreshInterceptor extends Interceptor {
       return handler.next(err);
     }
 
-    debugPrint('🔄 TokenRefreshInterceptor: Got 401 for ${err.requestOptions.path}');
+    debugPrint(
+      '🔄 TokenRefreshInterceptor: Got 401 for ${err.requestOptions.path}',
+    );
 
     // Don't retry auth endpoints
     if (err.requestOptions.path.contains('/auth/')) {
-      debugPrint('⚠️ TokenRefreshInterceptor: Skipping refresh for auth endpoint');
+      debugPrint(
+        '⚠️ TokenRefreshInterceptor: Skipping refresh for auth endpoint',
+      );
       return handler.next(err);
     }
 
     // If already refreshing, queue this request
     if (_isRefreshing) {
-      debugPrint('⏳ TokenRefreshInterceptor: Queueing request while refresh in progress');
+      debugPrint(
+        '⏳ TokenRefreshInterceptor: Queueing request while refresh in progress',
+      );
       _pendingRequests.add((options: err.requestOptions, handler: handler));
       return;
     }
@@ -55,9 +57,7 @@ class TokenRefreshInterceptor extends Interceptor {
       final response = await _dio.post(
         ApiConfig.getFullUrl(ApiConfig.authRefresh),
         data: {'refresh': refreshToken},
-        options: Options(
-          headers: {'Content-Type': 'application/json'},
-        ),
+        options: Options(headers: {'Content-Type': 'application/json'}),
       );
 
       // Save new tokens (with rotation)
@@ -74,23 +74,24 @@ class TokenRefreshInterceptor extends Interceptor {
       handler.resolve(retryResponse);
 
       // Retry all pending requests
-      debugPrint('🔄 TokenRefreshInterceptor: Retrying ${_pendingRequests.length} pending requests');
+      debugPrint(
+        '🔄 TokenRefreshInterceptor: Retrying ${_pendingRequests.length} pending requests',
+      );
       for (final pending in _pendingRequests) {
         try {
           final response = await _retryRequest(pending.options);
           pending.handler.resolve(response);
         } catch (e) {
           pending.handler.reject(
-            DioException(
-              requestOptions: pending.options,
-              error: e,
-            ),
+            DioException(requestOptions: pending.options, error: e),
           );
         }
       }
       _pendingRequests.clear();
     } catch (refreshError) {
-      debugPrint('❌ TokenRefreshInterceptor: Token refresh failed - $refreshError');
+      debugPrint(
+        '❌ TokenRefreshInterceptor: Token refresh failed - $refreshError',
+      );
       // Refresh failed - clear tokens and notify app
       await _storage.clearTokens();
       _onRefreshFailed();

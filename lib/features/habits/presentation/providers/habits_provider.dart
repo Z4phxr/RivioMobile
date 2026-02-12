@@ -14,8 +14,9 @@ import '../../data/datasources/habit_completion_storage.dart';
 import '../../data/repositories/habit_repository_impl.dart';
 
 // Storage provider
-final habitCompletionStorageProvider =
-    Provider<HabitCompletionStorageService>((ref) {
+final habitCompletionStorageProvider = Provider<HabitCompletionStorageService>((
+  ref,
+) {
   return HabitCompletionStorageService();
 });
 
@@ -52,8 +53,9 @@ final deleteHabitUseCaseProvider = Provider<DeleteHabitUseCase>((ref) {
   return DeleteHabitUseCase(repository);
 });
 
-final toggleArchiveHabitUseCaseProvider =
-    Provider<ToggleArchiveHabitUseCase>((ref) {
+final toggleArchiveHabitUseCaseProvider = Provider<ToggleArchiveHabitUseCase>((
+  ref,
+) {
   final repository = ref.watch(habitRepositoryProvider);
   return ToggleArchiveHabitUseCase(repository);
 });
@@ -134,12 +136,16 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
   Future<void> _loadCompletionsFromStorage() async {
     debugPrint('💾 HabitsNotifier: Loading completions from local storage...');
     final completions = await completionStorage.loadCompletions();
-    debugPrint('✅ HabitsNotifier: Loaded ${completions.length} completions from storage');
+    debugPrint(
+      '✅ HabitsNotifier: Loaded ${completions.length} completions from storage',
+    );
     state = state.copyWith(optimisticToggles: completions);
   }
 
   Future<void> loadHabits({bool skipCompletions = false}) async {
-    debugPrint('📋 HabitsNotifier: Loading habits (skipCompletions: $skipCompletions)...');
+    debugPrint(
+      '📋 HabitsNotifier: Loading habits (skipCompletions: $skipCompletions)...',
+    );
     state = state.copyWith(isLoading: true, error: null);
     try {
       if (skipCompletions) {
@@ -150,12 +156,14 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
       } else {
         // Load habits WITH completions from server
         final result = await getHabitsUseCase.callWithCompletions();
-        debugPrint('✅ HabitsNotifier: Loaded ${result.habits.length} habits with ${result.completions.length} server completions');
-        
+        debugPrint(
+          '✅ HabitsNotifier: Loaded ${result.habits.length} habits with ${result.completions.length} server completions',
+        );
+
         // Merge server completions with local optimistic updates
         final mergedCompletions = <String, bool>{};
         mergedCompletions.addAll(result.completions); // Start with server data
-        
+
         // Overlay any pending optimistic updates (don't lose uncommitted changes)
         for (final entry in state.optimisticToggles.entries) {
           if (state.pendingToggles.contains(entry.key)) {
@@ -166,15 +174,17 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
             mergedCompletions[entry.key] = entry.value;
           }
         }
-        
-        debugPrint('🔄 HabitsNotifier: Merged to ${mergedCompletions.length} total completions');
-        
+
+        debugPrint(
+          '🔄 HabitsNotifier: Merged to ${mergedCompletions.length} total completions',
+        );
+
         state = state.copyWith(
           habits: result.habits,
           optimisticToggles: mergedCompletions,
           isLoading: false,
         );
-        
+
         // Persist merged state to storage
         await completionStorage.saveCompletions(mergedCompletions);
       }
@@ -238,13 +248,17 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
     // SYNCHRONOUS check - prevent duplicate toggles for the same habit+date
     // This is checked BEFORE any async operations, so rapid clicks are blocked immediately
     if (_activeToggles.contains(key)) {
-      debugPrint('⚠️ HabitsNotifier: Toggle already in progress for $key, ignoring');
+      debugPrint(
+        '⚠️ HabitsNotifier: Toggle already in progress for $key, ignoring',
+      );
       return; // Already being toggled, ignore this request
     }
 
     // Also check async pending state (belt and suspenders approach)
     if (state.pendingToggles.contains(key)) {
-      debugPrint('⚠️ HabitsNotifier: Toggle already pending for $key, ignoring');
+      debugPrint(
+        '⚠️ HabitsNotifier: Toggle already pending for $key, ignoring',
+      );
       return;
     }
 
@@ -255,7 +269,9 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
     final storedValue = state.optimisticToggles[key] ?? false;
     final targetValue = !storedValue;
 
-    debugPrint('🔄 HabitsNotifier: Toggling habit $habitId on ${_formatDate(date)}: $storedValue -> $targetValue');
+    debugPrint(
+      '🔄 HabitsNotifier: Toggling habit $habitId on ${_formatDate(date)}: $storedValue -> $targetValue',
+    );
 
     // Optimistic update - toggle from stored value
     final currentToggles = Map<String, bool>.from(state.optimisticToggles);
@@ -270,7 +286,9 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
 
     try {
       final isCompleted = await toggleHabitLogUseCase(habitId, date);
-      debugPrint('✅ HabitsNotifier: Server confirmed habit $habitId on ${_formatDate(date)}: $isCompleted');
+      debugPrint(
+        '✅ HabitsNotifier: Server confirmed habit $habitId on ${_formatDate(date)}: $isCompleted',
+      );
 
       // Update state based on server response
       final updatedToggles = Map<String, bool>.from(state.optimisticToggles);
@@ -344,13 +362,13 @@ class HabitsNotifier extends StateNotifier<HabitsState> {
 // Provider
 final habitsNotifierProvider =
     StateNotifierProvider<HabitsNotifier, HabitsState>((ref) {
-  return HabitsNotifier(
-    getHabitsUseCase: ref.watch(getHabitsUseCaseProvider),
-    createHabitUseCase: ref.watch(createHabitUseCaseProvider),
-    updateHabitUseCase: ref.watch(updateHabitUseCaseProvider),
-    deleteHabitUseCase: ref.watch(deleteHabitUseCaseProvider),
-    toggleArchiveUseCase: ref.watch(toggleArchiveHabitUseCaseProvider),
-    toggleHabitLogUseCase: ref.watch(toggleHabitLogUseCaseProvider),
-    completionStorage: ref.watch(habitCompletionStorageProvider),
-  );
-});
+      return HabitsNotifier(
+        getHabitsUseCase: ref.watch(getHabitsUseCaseProvider),
+        createHabitUseCase: ref.watch(createHabitUseCaseProvider),
+        updateHabitUseCase: ref.watch(updateHabitUseCaseProvider),
+        deleteHabitUseCase: ref.watch(deleteHabitUseCaseProvider),
+        toggleArchiveUseCase: ref.watch(toggleArchiveHabitUseCaseProvider),
+        toggleHabitLogUseCase: ref.watch(toggleHabitLogUseCaseProvider),
+        completionStorage: ref.watch(habitCompletionStorageProvider),
+      );
+    });

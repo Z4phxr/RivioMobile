@@ -48,8 +48,10 @@ class _SleepDayScreenState extends ConsumerState<SleepDayScreen> {
       }
 
       setState(() {
-        _sleepRange =
-            RangeValues(startMinutes.toDouble(), endMinutes.toDouble());
+        _sleepRange = RangeValues(
+          startMinutes.toDouble(),
+          endMinutes.toDouble(),
+        );
       });
     }
   }
@@ -83,25 +85,29 @@ class _SleepDayScreenState extends ConsumerState<SleepDayScreen> {
       normalizedEndMinutes += 1440; // Next day
     }
 
-    DateTime start =
-        DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day)
-            .add(Duration(minutes: startMinutes));
-    DateTime end =
-        DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day)
-            .add(Duration(minutes: normalizedEndMinutes));
+    DateTime start = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    ).add(Duration(minutes: startMinutes));
+    DateTime end = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+    ).add(Duration(minutes: normalizedEndMinutes));
 
     try {
       await ref.read(sleepNotifierProvider.notifier).createSleepLog(start, end);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sleep log saved')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Sleep log saved')));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to save: $e')));
       }
     }
   }
@@ -112,9 +118,9 @@ class _SleepDayScreenState extends ConsumerState<SleepDayScreen> {
     final log = state.getLogForDate(_selectedDate);
 
     if (log == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No sleep log to delete')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('No sleep log to delete')));
       return;
     }
 
@@ -150,16 +156,16 @@ class _SleepDayScreenState extends ConsumerState<SleepDayScreen> {
         // Reload to ensure UI matches backend
         await ref.read(sleepNotifierProvider.notifier).loadSleepLogs();
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Sleep log deleted')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Sleep log deleted')));
         }
         _updateRangeFromLog();
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to delete: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Failed to delete: $e')));
         }
       }
     }
@@ -191,10 +197,7 @@ class _SleepDayScreenState extends ConsumerState<SleepDayScreen> {
       appBar: AppBar(
         title: const Text('Rivio'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadData,
-          ),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData),
         ],
       ),
       body: Column(
@@ -229,10 +232,7 @@ class _SleepDayScreenState extends ConsumerState<SleepDayScreen> {
             const SizedBox(height: 16),
             Text('Error: ${state.error}'),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadData,
-              child: const Text('Retry'),
-            ),
+            ElevatedButton(onPressed: _loadData, child: const Text('Retry')),
           ],
         ),
       );
@@ -306,8 +306,10 @@ class _SleepDayScreenState extends ConsumerState<SleepDayScreen> {
                     divisions: 288,
                     onChanged: (values) {
                       setState(() {
-                        _sleepRange =
-                            RangeValues(values.start, _sleepRange.end);
+                        _sleepRange = RangeValues(
+                          values.start,
+                          _sleepRange.end,
+                        );
                       });
                     },
                   ),
@@ -319,8 +321,10 @@ class _SleepDayScreenState extends ConsumerState<SleepDayScreen> {
                     divisions: 288,
                     onChanged: (values) {
                       setState(() {
-                        _sleepRange =
-                            RangeValues(_sleepRange.start, values.end);
+                        _sleepRange = RangeValues(
+                          _sleepRange.start,
+                          values.end,
+                        );
                       });
                     },
                   ),

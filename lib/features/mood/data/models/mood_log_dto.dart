@@ -39,12 +39,7 @@ class MoodLogDto {
     return '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
-  MoodLog toEntity() => MoodLog(
-        id: id,
-        date: date,
-        mood: mood,
-        note: note,
-      );
+  MoodLog toEntity() => MoodLog(id: id, date: date, mood: mood, note: note);
 }
 
 class MoodLogCreateRequest {

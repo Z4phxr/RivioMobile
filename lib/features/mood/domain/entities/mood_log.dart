@@ -11,12 +11,7 @@ class MoodLog {
     this.note,
   });
 
-  MoodLog copyWith({
-    int? id,
-    DateTime? date,
-    int? mood,
-    String? note,
-  }) {
+  MoodLog copyWith({int? id, DateTime? date, int? mood, String? note}) {
     return MoodLog(
       id: id ?? this.id,
       date: date ?? this.date,

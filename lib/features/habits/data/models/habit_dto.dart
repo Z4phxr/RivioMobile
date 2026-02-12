@@ -45,17 +45,13 @@ class HabitDto {
     };
   }
 
-  Habit toEntity() => Habit(
-        id: id,
-        name: name,
-        isArchived: isArchived,
-        createdAt: createdAt,
-      );
+  Habit toEntity() =>
+      Habit(id: id, name: name, isArchived: isArchived, createdAt: createdAt);
 
   /// Extract completion map from logs (habitId_date -> isCompleted)
   Map<String, bool> getCompletionMap() {
     if (logs == null) return {};
-    
+
     final completionMap = <String, bool>{};
     for (final log in logs!) {
       final dateStr = _formatDate(log.date);
