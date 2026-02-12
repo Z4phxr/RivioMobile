@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class WeekNavigator extends StatelessWidget {
   final DateTime selectedDate;
@@ -38,7 +39,7 @@ class WeekNavigator extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              '${weekStart.month}/${weekStart.day} - ${weekEnd.month}/${weekEnd.day}',
+              '${DateFormat('MMM d').format(weekStart)} – ${DateFormat('MMM d').format(weekEnd)}',
               textAlign: TextAlign.center,
               style: Theme.of(
                 context,

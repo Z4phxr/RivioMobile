@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/config/api_config.dart';
 import '../models/habit_dto.dart';
@@ -9,11 +10,20 @@ class HabitsRemoteDatasource {
 
   /// GET /api/habits/ - Fetch all habits with their logs
   Future<List<HabitDto>> getHabits() async {
-    final response = await apiClient.get(ApiConfig.habits);
-    final List<dynamic> habitsJson = response.data as List<dynamic>;
-    return habitsJson
-        .map((json) => HabitDto.fromJson(json as Map<String, dynamic>))
-        .toList();
+    debugPrint('🌐 HabitsRemoteDatasource: Fetching habits from API...');
+    try {
+      final response = await apiClient.get(ApiConfig.habits);
+      final List<dynamic> habitsJson = response.data as List<dynamic>;
+      debugPrint('✅ HabitsRemoteDatasource: Received ${habitsJson.length} habits from API');
+      final habits = habitsJson
+          .map((json) => HabitDto.fromJson(json as Map<String, dynamic>))
+          .toList();
+      debugPrint('✅ HabitsRemoteDatasource: Parsed ${habits.length} habit DTOs');
+      return habits;
+    } catch (e) {
+      debugPrint('❌ HabitsRemoteDatasource: Failed to fetch habits - $e');
+      rethrow;
+    }
   }
 
   /// POST /api/habits/add_habit/ - Create new habit

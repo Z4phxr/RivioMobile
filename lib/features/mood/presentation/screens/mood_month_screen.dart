@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import '../../../../core/presentation/widgets/month_navigator.dart';
 import '../../../../core/presentation/widgets/period_tabs.dart';
 import '../providers/mood_provider.dart';
@@ -197,7 +196,7 @@ class _MoodMonthScreenState extends ConsumerState<MoodMonthScreen> {
                           top: 4,
                           left: 4,
                           child: Text(
-                            DateFormat('MMM d').format(date),
+                            '${date.day}',
                             style: const TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
