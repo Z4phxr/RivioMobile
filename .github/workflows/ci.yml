@@ -14,6 +14,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -37,21 +40,21 @@ jobs:
         if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
         run: |
           # If the verify step found formatting issues, auto-apply them and push back to the branch
           set -euo pipefail
           echo "Checking for formatting changes..."
-          # Show git status for debugging
           git status --porcelain
           if [ -n "$(git status --porcelain)" ]; then
-            echo "Formatting changes detected. Committing and pushing..."
+            echo "Formatting changes detected. Committing and pushing to branch: ${TARGET_BRANCH}..."
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git config user.name "github-actions[bot]"
             dart format .
             git add -A
             git commit -m "chore(ci): apply dart format from CI" || echo "nothing to commit"
-            # Push back to the branch that triggered the workflow
-            git push
+            # Push back to the branch that triggered the workflow (handles PRs and direct pushes)
+            git push origin "HEAD:refs/heads/${TARGET_BRANCH}"
           else
             echo "No formatting changes detected."
           fi
