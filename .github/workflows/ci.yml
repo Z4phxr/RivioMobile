@@ -31,6 +31,30 @@ jobs:
 
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
+        continue-on-error: true
+
+      - name: Auto-format & push (if needed)
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # If the verify step found formatting issues, auto-apply them and push back to the branch
+          set -euo pipefail
+          echo "Checking for formatting changes..."
+          # Show git status for debugging
+          git status --porcelain
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Formatting changes detected. Committing and pushing..."
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+            dart format .
+            git add -A
+            git commit -m "chore(ci): apply dart format from CI" || echo "nothing to commit"
+            # Push back to the branch that triggered the workflow
+            git push
+          else
+            echo "No formatting changes detected."
+          fi
 
       - name: Analyze project
         run: flutter analyze --fatal-infos --fatal-warnings
